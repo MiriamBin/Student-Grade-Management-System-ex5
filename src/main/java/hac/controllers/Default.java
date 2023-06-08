@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 /** this is a test controller, delete/replace it when you start working on your project */
 @Controller
 public class Default {
-
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("greeting", "Hello World");
-        return "index";
-    }
+//
+//    @GetMapping("/aa")
+//    public String index(Model model) {
+//        model.addAttribute("greeting", "Hello World");
+//        return "addCourse";
+//    }
 }
