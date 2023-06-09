@@ -10,10 +10,6 @@
 </head>
 <body>
 
-<div th:each="course : ${courses}">
-    <p th:text="${course.courseName}"></p>
-</div>
-
 <form action="#" th:action="@{/addCourse}" th:object="${course}" method="post">
     <div class="row">
         <div class="form-group col-md-6">
@@ -33,6 +29,36 @@
         </div>
     </div>
 </form>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Course Name</th>
+        <th scope="col">Credit</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="course : ${courses}">
+        <td th:text="${course.courseName}"> </td>
+        <td th:text="${course.credit}"> </td>
+
+        <td>
+            <a th:href="@{/editCourse/{id}(id=${course.id})}" class="btn btn-primary">EDIT</a>
+        </td>
+        <td>
+            <form action="#" th:action="@{/deleteCourse}" th:object="${course}" method="post">
+                <input type="hidden" name="id" th:value="${course.id}">
+                <input class="btn btn-primary" type="submit" value="DELETE" />
+            </form>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+
+
+
 
 
 
