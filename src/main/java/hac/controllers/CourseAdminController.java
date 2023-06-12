@@ -22,20 +22,20 @@ public class CourseAdminController {
     public String main(Model model) {
         model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
-        return "add-course";
+        return "ManageCourses";
     }
 
     @PostMapping("/addCourse")
     public String addCourse(@Valid Course course, BindingResult result, Model model) {
         System.out.println("addCourse: " + course);
         if (result.hasErrors()) {
-            return "add-course";
+            return "ManageCourses";
         }
         courseRepo.save(course);
         // pass the list of users to the view
         model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
-        return "add-course";
+        return "ManageCourses";
     }
 
     @PostMapping("/delete")
@@ -80,7 +80,7 @@ public class CourseAdminController {
         courseRepo.save(course);
         model.addAttribute("courses", courseRepo.findAll());
 
-        return "add-course";
+        return "ManageCourses";
     }
 
 //    @GetMapping("/delete/{id}")

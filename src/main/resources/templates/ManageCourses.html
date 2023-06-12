@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <title>ניהול קטלוג קורסים</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" rel="stylesheet">
+    <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" rel="stylesheet">
+
+    <style>
+        body {
+            text-align: right;
+        }
+
+        .text-left {
+            text-align: left !important;
+        }
+
+        .text-right {
+            text-align: right !important;
+        }
+
+        .form-group {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<header class="bg-primary py-3">
+    <div class="container">
+        <h1 class="text-white">ניהול קורסים לסטודנטים</h1>
+        <nav>
+            <ul class="nav">
+                <li class="nav-item"><a class="nav-link text-white" href="#">קטלוג קורסים</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="#">התנתקות</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="container py-4">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-center mb-4">ניהול קטלוג קורסים</h2>
+            </div>
+        </div>
+    </section>
+    <section class="py-3">
+        <form action="#" method="post" th:action="@{/addCourse}" th:object="${course}">
+            <div class="row">
+                <div class="form-group col-xs-12 col-md-6">
+                    <label class="col-form-label" for="courseName">שם</label>
+                    <input class="form-control" id="courseName" placeholder="שם" th:field="*{courseName}" type="text">
+                    <span class="text-danger" th:errors="*{courseName}" th:if="${#fields.hasErrors('courseName')}"></span>
+                </div>
+                <div class="form-group col-xs-12 col-md-6">
+                    <label class="col-form-label" for="credit">נקודות זכות</label>
+                    <input class="form-control" id="credit" placeholder="נקודות זכות" th:field="*{credit}" type="number">
+                    <span class="text-danger" th:errors="*{credit}" th:if="${#fields.hasErrors('credit')}"></span>
+                </div>
+            </div>
+            <div class="row">
+                <input class="btn btn-primary" type="submit" value="הוסף קורס">
+            </div>
+        </form>
+    </section>
+
+    <section class="py-3">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-center text-white">
+                        <h4 class="card-title">קטלוג קורסים</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>שם הקורס</th>
+                                    <th>סוג הקורס</th>
+                                    <th>נקודות זכות</th>
+                                    <th>פעולות</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="course : ${courses}">
+                                    <td th:text="${course.courseName}"></td>
+                                    <!--<td th:text="${course.courseType}"></td>-->
+                                    <td>להוסיף סוג</td>
+                                    <td th:text="${course.credit}"></td>
+
+                                    <td>
+                                        <a class="btn btn-primary"
+                                           th:href="@{/editCourse/{id}(id=${course.id})}">ערוך</a>
+                                        <form action="#" method="post" th:action="@{/delete}" th:object="${course}">
+                                            <input name="id" th:value="${course.id}" type="hidden">
+                                            <button class="btn btn-danger" type="submit" value="מחק">מחק</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+
+<footer class="bg-light py-3">
+    <div class="container">
+        <p>&copy; 2023 מכללת הדסה. כל הזכויות שמורות למרים בינימינס וסלומון דמה.</p>
+    </div>
+</footer>
+</body>
+</html>
