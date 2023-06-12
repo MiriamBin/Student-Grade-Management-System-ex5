@@ -25,11 +25,11 @@ public class Course implements Serializable {
     private String courseName;
 
     @Positive(message = "Course credit must be positive")
-    private Integer credit;
+    private int credit;
 
     public Course() {}
 
-    public Course(String courseName, Integer credit) {
+    public Course(String courseName, int credit) {
         this.courseName = courseName;
         this.credit = credit;
     }
@@ -40,11 +40,15 @@ public class Course implements Serializable {
     public long getId() {
         return id;
     }
-    public void setCourseName(String courseName) {this.courseName = courseName;}
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
     public String getCourseName() {
         return courseName;
     }
-    public void setCredit(Integer credit) {
+
+    public void setCredit(int credit) {
         this.credit = credit;
     }
     public int getCredit() {
