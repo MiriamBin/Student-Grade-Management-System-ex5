@@ -19,7 +19,7 @@
         </div>
         <div class="form-group col-md-6">
             <label for="credit" class="col-form-label">Credits</label>
-            <input type="text" th:field="*{credit}" class="form-control" id="credit" placeholder="Credits">
+            <input type="number" th:field="*{credit}" class="form-control" id="credit" placeholder="Credits">
             <span th:if="${#fields.hasErrors('credit')}" th:errors="*{credit}" class="text-danger"></span>
         </div>
     </div>
@@ -30,12 +30,13 @@
     </div>
 </form>
 
-<table class="table">
+<table class="table table-striped table-responsive-md">
     <thead>
     <tr>
-        <th scope="col">Course Name</th>
-        <th scope="col">Credit</th>
-        <th scope="col">Actions</th>
+        <th>Course Name</th>
+        <th>Credit</th>
+        <th>Edit</th>
+        <th>Delete</th>
     </tr>
     </thead>
     <tbody>
@@ -47,20 +48,13 @@
             <a th:href="@{/editCourse/{id}(id=${course.id})}" class="btn btn-primary">EDIT</a>
         </td>
         <td>
-            <form action="#" th:action="@{/deleteCourse}" th:object="${course}" method="post">
+            <form action="#" th:action="@{/delete}" th:object="${course}" method="post">
                 <input type="hidden" name="id" th:value="${course.id}">
                 <input class="btn btn-primary" type="submit" value="DELETE" />
             </form>
         </td>
-
     </tr>
     </tbody>
 </table>
-
-
-
-
-
-
 </body>
 </html>

@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.io.Serial;
@@ -19,15 +20,16 @@ public class Course implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @NotNull
     @NotEmpty(message = "Name is mandatory")
     private String courseName;
 
     @Positive(message = "Course credit must be positive")
-    private int credit;
+    private Integer credit;
 
     public Course() {}
 
-    public Course(String courseName, int credit) {
+    public Course(String courseName, Integer credit) {
         this.courseName = courseName;
         this.credit = credit;
     }
@@ -38,17 +40,11 @@ public class Course implements Serializable {
     public long getId() {
         return id;
     }
-
-    public void setCourseName(String courseName) {
-        if (courseName.length() > 32)
-            throw new IllegalArgumentException("Name cannot exceed 32 characters");
-        this.courseName = courseName;
-    }
+    public void setCourseName(String courseName) {this.courseName = courseName;}
     public String getCourseName() {
         return courseName;
     }
-
-    public void setCredit(int credit) {
+    public void setCredit(Integer credit) {
         this.credit = credit;
     }
     public int getCredit() {

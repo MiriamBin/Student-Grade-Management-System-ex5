@@ -21,6 +21,7 @@ public class CourseAdminController {
     @GetMapping("/")
     public String main(Model model) {
         model.addAttribute("course", new Course());
+        model.addAttribute("courses", courseRepo.findAll());
         return "add-course";
     }
 
@@ -31,34 +32,14 @@ public class CourseAdminController {
             return "add-course";
         }
         courseRepo.save(course);
-        model.addAttribute("courses", courseRepo.findAll());
+        // pass the list of users to the view
         model.addAttribute("course", new Course());
+        model.addAttribute("courses", courseRepo.findAll());
         return "add-course";
     }
 
-    @GetMapping("/editCourse/{id}")
-    public String showUpdateForm(@PathVariable("id") long id, Model model) {
-        Course course = courseRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
-        model.addAttribute("course", course);
-        return "edit-coureses";
-    }
-
-    @PostMapping("/updateCourse/{id}")
-    public String updateCourse(@PathVariable("id") long id, @Valid Course course,
-                               BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            course.setId(id);
-            return "edit-coureses";
-        }
-
-        courseRepo.save(course);
-        model.addAttribute("courses", courseRepo.findAll());
-        return "edit-coureses";
-    }
-
-    @PostMapping("/deleteCourse")
-    public String deleteCourse(@RequestParam("id") long id, Model model) {
+    @PostMapping("/delete")
+    public String deleteUser(@RequestParam("id") long id, Model model) {
 
         System.out.println("deleteUser: 1111111");
         // we throw an exception if the user is not found
@@ -66,10 +47,39 @@ public class CourseAdminController {
         Course user = courseRepo
                 .findById(id)
                 .orElseThrow(
-                        () -> new IllegalArgumentException("Invalid course Id:" + id)
+                        () -> new IllegalArgumentException("Invalid user Id:" + id)
                 );
         courseRepo.delete(user);
+        model.addAttribute("users", courseRepo.findAll());
+        return "redirect:/";
+    }
+
+    @GetMapping("/editCourse/{id}")
+    public String showUpdateForm(@PathVariable("id") long id, Model model) {
+        System.out.println("showUpdateForm: " + id);
+        Course course = courseRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
+
+        // the name "course"  is bound to the VIEW
+        model.addAttribute("course", course);
+        return "edit-courses";
+    }
+
+    @GetMapping("/update/{id}")
+    public String updateUserGet() {
+        return "redirect:/";
+    }
+
+    @PostMapping("/update")
+    public String updateCourse(@RequestParam("id") long id, @Valid Course course, BindingResult result, Model model) {
+        System.out.println("updateUser: " + course);
+        if (result.hasErrors()) {
+            course.setId(id);
+            return "edit-courses";
+        }
+        course.setId(id);
+        courseRepo.save(course);
         model.addAttribute("courses", courseRepo.findAll());
+
         return "add-course";
     }
 
@@ -77,9 +87,51 @@ public class CourseAdminController {
 //    public String deleteUserGet(@PathVariable long id) {
 //
 //        System.out.println("deleteUser: 222222");
-//        return "redirect:add-course";
+//        return "redirect:/";
 //    }
 //
+//    @GetMapping("/delete")
+//    public String deleteUserGetNoParams() {
+//        System.out.println("deleteUser: 333333");
+//
+//        return "redirect:/";
+//    }
+
+//
+//    @GetMapping("/add-course")
+//    public String showAddCoursePage(Model model) {
+//        model.addAttribute("course", new Course());
+//        return "add-course";
+//    }
+
+//    @GetMapping("/editCourse/{id}")
+//    public String showUpdateForm(@PathVariable("id") long id, Model model) {
+//        Course course = courseRepo.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
+//        model.addAttribute("course", course);
+//        return "edit-coureses";
+//    }
+
+//    @PostMapping("/updateCourse/{id}")
+//    public String updateCourse(@PathVariable("id") long id, @Valid Course course,
+//                               BindingResult result, Model model) {
+//        if (result.hasErrors()) {
+//            course.setId(id);
+//            return "edit-coureses";
+//        }
+//
+//        courseRepo.save(course);
+//        model.addAttribute("courses", courseRepo.findAll());
+//        return "edit-coureses";
+//    }
+
+//    @GetMapping("/delete/{id}")
+//    public String deleteUserGet(@PathVariable long id) {
+//
+//        System.out.println("deleteUser: 222222");
+//        return "redirect:add-course";
+//    }
+
 //    @GetMapping("/delete")
 //    public String deleteUserGetNoParams() {
 //        System.out.println("deleteUser: 333333");
