@@ -2,12 +2,15 @@ package hac.beans;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 
-@Entity
 
+@Getter
+@Setter
+@Entity
 public class UserCourses implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -30,30 +33,5 @@ public class UserCourses implements Serializable {
         this.course = course;
         this.username = username;
         this.grade = grade;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-    public long getId() {
-        return id;
-    }
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-    public Course getCourse() {
-        return course;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public String getUsername() {
-        return username;
-    }
-    public void setGrade(Integer grade) {
-        this.grade = grade;
-    }
-    public Integer getGrade() {
-        return grade;
     }
 }

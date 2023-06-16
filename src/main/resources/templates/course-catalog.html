@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>קטלוג קורסים</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    table.table-bordered {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+<header class="bg-primary py-3">
+  <div class="container">
+    <h1 class="text-white">ניהול קורסים לסטודנטים</h1>
+    <nav>
+      <ul class="nav">
+        <li class="nav-item"><a class="nav-link text-white" href="#">דף הבית</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="#">קורסים שלי</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="#">קטלוג קורסים</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="#">התנתקות</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="container py-4">
+  <section>
+    <div class="row">
+      <div class="col-12">
+        <h2 class="text-center mb-4">קטלוג קורסים</h2>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card mb-3">
+          <div class="card-header bg-primary text-center text-white">
+            <h4 class="card-title">מידע לסטודנט</h4>
+          </div>
+          <div class="card-body">
+
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>&nbsp;</th>
+                    <th>נקודות זכות</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <th>קורסי חובה במדעי המחשב</th>
+                  <td>105</td>
+                </tr>
+                <tr>
+                  <th>קורסי בחירה במדעי המחשב</th>
+                  <td>25</td>
+                </tr>
+                <tr>
+                  <th>קורסי בחירה כללים</th>
+                  <td>10</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                  <th>סה"כ</th>
+                  <th>140</th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+    <section>
+      <div class="row">
+        <div class="col-12">
+          <h2 class="text-center mb-4">קטלוג קורסים לסטודנט</h2>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-3">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card mb-3">
+            <div class="card-header bg-primary text-center text-white">
+              <h4 class="card-title">קטלוג קורסים</h4>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th>שם הקורס</th>
+                    <th>סוג הקורס</th>
+                    <th>נקודות זכות</th>
+                    <th>פעולות</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:each="course : ${courses}">
+                    <td th:text="${course.courseName}"></td>
+                    <!--<td th:text="${course.courseType}"></td>-->
+                    <td>להוסיף סוג</td>
+                    <td th:text="${course.credit}"></td>
+
+                    <td>
+                      <form action="#" method="post" th:action="@{/addToStudentList}" th:object="${course}">
+                        <input name="id" th:value="${course.id}" type="hidden">
+                        <button class="btn btn-primary" type="submit">הוסף לקורסים שלי</button>
+                      </form>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="alert alert-warning" th:text="${message}" th:if="${message}"></span>
+    </section>
+
+
+  <section class="py-3">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card mb-3">
+          <div class="card-header bg-primary text-center text-white">
+            <h4 class="card-title">קורסים שלי</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                <tr>
+                  <th>שם הקורס</th>
+                  <th>סוג הקורס</th>
+                  <th>נקודות זכות</th>
+                  <th>פעולות</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="userCourses : ${userCourses}">
+                  <td th:text="${userCourses.course.courseName}"></td>
+                  <!--<td th:text="${course.courseType}"></td>-->
+                  <td>להוסיף סוג</td>
+                  <td th:text="${userCourses.course.credit}"></td>
+                  <td th:text="${userCourses.username}"></td>
+                  <td>
+<!--                    <form action="#" method="post" th:action="@{/addToStudentList}" th:object="${course}">-->
+<!--                      <input name="id" th:value="${course.id}" type="hidden">-->
+<!--                      <button class="btn btn-primary" type="submit">הוסף לקורסים שלי</button>-->
+<!--                    </form>-->
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  </main>
+
+<footer class="bg-light py-3">
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

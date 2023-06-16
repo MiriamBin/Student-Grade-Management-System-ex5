@@ -18,7 +18,7 @@ public class CourseAdminController {
     @Autowired
     private CourseRepo courseRepo;
 
-    @GetMapping("/")
+    @GetMapping("/admin")
     public String main(Model model) {
         model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
@@ -31,6 +31,10 @@ public class CourseAdminController {
         if (result.hasErrors()) {
             return "ManageCourses";
         }
+//        if(courseRepo.findByName(course.getName()) != null) {
+//            model.addAttribute("message", "Course already exists.");
+//            return "ManageCourses";
+//        }
         courseRepo.save(course);
         // pass the list of users to the view
         model.addAttribute("course", new Course());
@@ -41,7 +45,7 @@ public class CourseAdminController {
     @PostMapping("/delete")
     public String deleteUser(@RequestParam("id") long id, Model model) {
 
-        System.out.println("deleteUser: 1111111");
+        System.out.println("deleteUser: " + id); //TODO: remove this line
         // we throw an exception if the user is not found
         // since we don't catch the exception here, it will fall back on an error page (see below)
         Course user = courseRepo
@@ -51,7 +55,7 @@ public class CourseAdminController {
                 );
         courseRepo.delete(user);
         model.addAttribute("users", courseRepo.findAll());
-        return "redirect:/";
+        return "redirect:/admin";
     }
 
     @GetMapping("/editCourse/{id}")
