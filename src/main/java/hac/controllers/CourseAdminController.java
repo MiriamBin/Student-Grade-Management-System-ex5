@@ -18,18 +18,18 @@ public class CourseAdminController {
     @Autowired
     private CourseRepo courseRepo;
 
-    @GetMapping("/admin")
+    @GetMapping("/ManageCourses")
     public String main(Model model) {
         model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
-        return "ManageCourses";
+        return "admin/ManageCourses";
     }
 
     @PostMapping("/addCourse")
     public String addCourse(@Valid Course course, BindingResult result, Model model) {
         System.out.println("addCourse: " + course);
         if (result.hasErrors()) {
-            return "ManageCourses";
+            return "admin/ManageCourses";
         }
 //        if(courseRepo.findByName(course.getName()) != null) {
 //            model.addAttribute("message", "Course already exists.");
@@ -39,7 +39,7 @@ public class CourseAdminController {
         // pass the list of users to the view
         model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
-        return "ManageCourses";
+        return "admin/ManageCourses";
     }
 
     @PostMapping("/delete")
@@ -55,7 +55,7 @@ public class CourseAdminController {
                 );
         courseRepo.delete(user);
         model.addAttribute("users", courseRepo.findAll());
-        return "redirect:/admin";
+        return "redirect:/ManageCourses";
     }
 
     @GetMapping("/editCourse/{id}")
@@ -65,7 +65,7 @@ public class CourseAdminController {
 
         // the name "course"  is bound to the VIEW
         model.addAttribute("course", course);
-        return "edit-courses";
+        return "admin/edit-courses";
     }
 
     @GetMapping("/update/{id}")
@@ -78,13 +78,13 @@ public class CourseAdminController {
         System.out.println("updateUser: " + course);
         if (result.hasErrors()) {
             course.setId(id);
-            return "edit-courses";
+            return "admin/edit-courses";
         }
         course.setId(id);
         courseRepo.save(course);
         model.addAttribute("courses", courseRepo.findAll());
 
-        return "ManageCourses";
+        return "admin/ManageCourses";
     }
 
 //    @GetMapping("/delete/{id}")

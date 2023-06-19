@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <nav th:fragment="nav">
+    <ul class="nav">
+      <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+        <a class="nav-link text-white" th:href="@{/home-page}" href="#">דף הבית</a>
+      </li>
+      <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+        <a class="nav-link text-white" th:href="@{/myCourses}" href="#">קורסים שלי</a>
+      </li>
+      <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+        <a class="nav-link text-white" th:href="@{/userCatalog}" href="#">קטלוג קורסים</a>
+      </li>
+      <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+        <a class="nav-link text-white" th:href="@{/logout}" href="#">התנתקות</a>
+      </li>
+    </ul>
+  </nav>
+
+
+</head>
+<body>
+
+</body>
+</html>

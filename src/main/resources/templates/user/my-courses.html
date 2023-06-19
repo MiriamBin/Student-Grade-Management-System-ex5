@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>קורסים שלי</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .card-header {
+            background-color: #4e89d4;
+            color: #fff;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            margin-bottom: 1rem;
+        }
+
+        .table th, .table td {
+            text-align: center;
+        }
+
+        .btn-add {
+            margin-top: 1rem;
+        }
+
+        .btn-delete, .btn-edit {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<header class="bg-primary py-3">
+    <div class="container">
+        <h1 class="text-white">ניהול קורסים לסטודנטים</h1>
+        <div th:insert="navbar.html :: nav"></div>
+    </div>
+</header>
+
+<main class="container py-4">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-center mb-4">קורסים שלי</h2>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>מספר קורס</th>
+                            <th>שם הקורס</th>
+                            <th>סוג הקורס</th>
+                            <th>נקודות זכות</th>
+                            <th>ציון</th>
+                            <th>פעולות</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+<!--                        <tr th:each="course : ${courses}">-->
+<!--                            <td th:text="${course.course.id}"></td>-->
+<!--                            <td th:text="${course.course.courseName}"></td>-->
+<!--                            <td th:text="${course.course.credit}"></td>-->
+<!--                            <td th:text="${course.username}"></td>-->
+<!--                            <td th:text="${course.grade}"></td>-->
+<!--                            <td>-->
+<!--                                <button class="btn btn-danger btn-delete" th:onclick="'deleteCourse(\'' + ${course.course.id} + '\')'">מחק</button>-->
+<!--                                <button class="btn btn-warning btn-edit" th:onclick="'editCourseGade(\'' + ${course.course.id} + '\')'">ערוך</button>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+<!--        <div class="row">-->
+<!--            <div class="col-12">-->
+<!--                <form id="addCourseForm" onsubmit="addCourse(event)">-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-md-3">-->
+<!--                            <div class="form-group">-->
+<!--                                <label for="courseNumber">מספר קורס:</label>-->
+<!--                                <input type="text" class="form-control" id="courseNumber" required>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-3">-->
+<!--                            <div class="form-group">-->
+<!--                                <label for="courseName">שם הקורס:</label>-->
+<!--                                <input type="text" class="form-control" id="courseName" required>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-3">-->
+<!--                            <div class="form-group">-->
+<!--                                <label for="courseType">סוג הקורס:</label>-->
+<!--                                <select class="form-control" id="courseType" required>-->
+<!--                                    <option value="חובה">קורס חובה</option>-->
+<!--                                    <option value="בחירה מדמח">קורס בחירה מדמח</option>-->
+<!--                                    <option value="בחירה כללי">קורס בחירה כללי</option>-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-2">-->
+<!--                            <div class="form-group">-->
+<!--                                <label for="creditPoints">נקודות זכות:</label>-->
+<!--                                <input type="number" class="form-control" id="creditPoints" required>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-2">-->
+<!--                            <div class="form-group">-->
+<!--                                <label for="grade">ציון:</label>-->
+<!--                                <input type="number" class="form-control" id="grade" required>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-1">-->
+<!--                            <button type="submit" class="btn btn-primary btn-add">הוסף קורס</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+        </div>
+    </section>
+</main>
+
+<footer class="bg-light py-3">
+</footer>
+
+<script>
+    function addCourse(event) {
+        event.preventDefault();
+
+        var courseNumber = document.getElementById('courseNumber').value;
+        var courseName = document.getElementById('courseName').value;
+        var courseType = document.getElementById('courseType').value;
+        var creditPoints = document.getElementById('creditPoints').value;
+        var grade = document.getElementById('grade').value;
+
+        if (courseNumber && courseName && courseType && creditPoints && grade) {
+            var tbody = document.querySelector('table tbody');
+            var newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                    <td>${courseNumber}</td>
+                    <td>${courseName}</td>
+                    <td>${courseType}</td>
+                    <td>${creditPoints}</td>
+                    <td>${grade}</td>
+                    <td>
+                        <button class="btn btn-primary btn-edit" onclick="editCourse(this)">ערוך</button>
+                        <button class="btn btn-danger btn-delete" onclick="removeCourse(this)">מחק</button>
+                    </td>
+                `;
+            tbody.appendChild(newRow);
+
+            document.getElementById('courseNumber').value = '';
+            document.getElementById('courseName').value = '';
+            document.getElementById('courseType').value = '';
+            document.getElementById('creditPoints').value = '';
+            document.getElementById('grade').value = '';
+        }
+    }
+
+    function removeCourse(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+    function editCourse(button) {
+        var row = button.parentNode.parentNode;
+        var courseNumber = row.cells[0].innerText;
+        var courseName = row.cells[1].innerText;
+        var courseType = row.cells[2].innerText;
+        var creditPoints = row.cells[3].innerText;
+        var grade = row.cells[4].innerText;
+
+        document.getElementById('courseNumber').value = courseNumber;
+        document.getElementById('courseName').value = courseName;
+        document.getElementById('courseType').value = courseType;
+        document.getElementById('creditPoints').value = creditPoints;
+        document.getElementById('grade').value = grade;
+
+        row.parentNode.removeChild(row);
+    }
+</script>
+</body>
+</html>
