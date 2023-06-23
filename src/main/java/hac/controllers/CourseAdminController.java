@@ -20,24 +20,26 @@ public class CourseAdminController {
     public String main(Model model) {
         model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
-        return "admin/ManageCourses";
+        return "admin/manage-courses";
     }
 
     @PostMapping("/addCourse")
     public String addCourse(@Valid Course course, BindingResult result, Model model) {
         System.out.println("addCourse: " + course);
         if (result.hasErrors()) {
-            return "admin/ManageCourses";
+            return "admin/manage-courses";
         }
-//        if(courseRepo.findByName(course.getName()) != null) {
-//            model.addAttribute("message", "Course already exists.");
-//            return "ManageCourses";
-//        }
+        if(courseRepo.existsByCourseName(course.getCourseName())){
+            model.addAttribute("message", "Course already exists.");
+            model.addAttribute("course", new Course());
+            model.addAttribute("courses", courseRepo.findAll());
+            return "admin/manage-courses";
+        }
         courseRepo.save(course);
         // pass the list of users to the view
         model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
-        return "admin/ManageCourses";
+        return "admin/manage-courses";
     }
 
     @PostMapping("/delete")
@@ -82,7 +84,7 @@ public class CourseAdminController {
         courseRepo.save(course);
         model.addAttribute("courses", courseRepo.findAll());
 
-        return "admin/ManageCourses";
+        return "admin/manage-courses";
     }
 
 //    @GetMapping("/delete/{id}")

@@ -1,7 +1,5 @@
 package hac.controllers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,7 +39,7 @@ public class Default {
     @RequestMapping("/admin")
     public String adminIndex(Principal principal) {
         System.out.println("Current logged user details: " + " (" + principal + ")" );
-        return "admin/ManageCourses";
+        return "manage-courses";
     }
 
     @RequestMapping("/403")
