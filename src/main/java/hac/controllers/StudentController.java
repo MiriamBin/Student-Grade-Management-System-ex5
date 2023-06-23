@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
+
 //@RequestMapping("/user")  TODO: uncomment this line
 @Controller
 public class StudentController {
@@ -23,15 +25,16 @@ public class StudentController {
     private CourseRepo courseRepo;
 
     @GetMapping("/userCatalog")
-    public String main(Model model) {
+    public String main(Model model, Principal principal) {
         System.out.println("userCatalog:!!!!!!!!!!!!!!!!!!! " );
         model.addAttribute("courses", courseRepo.findAll());
-        model.addAttribute("userCourses", userCoursesRepo.findAll());
+        model.addAttribute("userCourses", userCoursesRepo.findByUsername(principal.getName()));
+
         return "user/course-catalog";
     }
 
     @PostMapping("/addToStudentList")
-    public String addCourseToStudentList(@RequestParam("id") long id, Model model) {
+    public String addCourseToStudentList(@RequestParam("id") long id, Model model, Principal principal) {
         System.out.println("addToStudentList: " + id);
 
         Course newCourse = courseRepo
@@ -42,7 +45,7 @@ public class StudentController {
 
         UserCourses existingUserCourses = userCoursesRepo.findByCourseAndUsername(newCourse, "Shlomo");
         if (existingUserCourses == null) {
-            userCoursesRepo.save( new UserCourses(newCourse, "Shlomo",90) );
+            userCoursesRepo.save( new UserCourses(newCourse,principal.getName(),90) ); //TODO: change the grade to the correct value
             System.out.println("courseRepo: " + userCoursesRepo.findAll());
             model.addAttribute("message", "Course added successfully.");
         } else {
@@ -50,7 +53,7 @@ public class StudentController {
         }
 
         model.addAttribute("courses", courseRepo.findAll());
-        model.addAttribute("userCourses", userCoursesRepo.findAll());
+        model.addAttribute("userCourses", userCoursesRepo.findByUsername(principal.getName()));
 
         return "user/course-catalog";
     }
@@ -84,10 +87,12 @@ public class StudentController {
     }
 
     @GetMapping("/myCourses")
-    public String myCourses(Model model) {
+    public String myCourses(Model model, Principal principal) {
         System.out.println("myCourses6666666666666666");
         model.addAttribute("courses", courseRepo.findAll());
         model.addAttribute("userCourses", userCoursesRepo.findAll());
+        model.addAttribute("userCourses", userCoursesRepo.findByUsername(principal.getName()));
+
         return "/user/my-courses";
     }
 }

@@ -6,19 +6,17 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
 
+@RequestMapping("/admin")
 @Controller
 public class CourseAdminController {
 
     @Autowired
     private CourseRepo courseRepo;
 
-    @GetMapping("/ManageCourses")
+    @GetMapping("/manageCourses")
     public String main(Model model) {
         model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
@@ -55,7 +53,7 @@ public class CourseAdminController {
                 );
         courseRepo.delete(user);
         model.addAttribute("users", courseRepo.findAll());
-        return "redirect:/ManageCourses";
+        return "redirect:/admin/manageCourses";
     }
 
     @GetMapping("/editCourse/{id}")

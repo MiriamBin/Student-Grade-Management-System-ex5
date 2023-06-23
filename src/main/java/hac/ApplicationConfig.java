@@ -23,6 +23,10 @@ public class ApplicationConfig {
                 .password(bCryptPasswordEncoder.encode("a"))
                 .roles("USER")
                 .build());
+        manager.createUser(User.withUsername("b")
+                .password(bCryptPasswordEncoder.encode("b"))
+                .roles("USER")
+                .build());
         manager.createUser(User.withUsername("s")
                 .password(bCryptPasswordEncoder.encode("s"))
                 .roles("ADMIN")
@@ -48,9 +52,9 @@ public class ApplicationConfig {
                 .csrf(withDefaults())
 
                 .authorizeHttpRequests((requests) -> requests
-                                .requestMatchers( "/", "/error").permitAll()
+                                .requestMatchers( "/", "/error","/images/**").permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/user/**", "/userCatalog", "/myCourses").hasRole("USER")
+                                .requestMatchers("/user/**", "/userCatalog", "/myCourses", "/addToStudentList").hasRole("USER")
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
