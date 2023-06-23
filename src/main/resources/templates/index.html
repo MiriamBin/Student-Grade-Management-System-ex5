@@ -1,14 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html dir="rtl" lang="he" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Hello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ניהול קורסים לסטודנטים</title>
+    <!--    <link rel="stylesheet" th:href="@{/css/main.css}" />-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-<h1 th:text="${greeting}"></h1>
-    <p>This is a test page.</p>
-   <p>Delete it from your repo before submission!</p>
-<!-- TODO: delete this file before submission-->
+<header class="bg-primary py-4">
+    <div class="container">
+        <h1 class="text-white">ניהול קורסים לסטודנטים</h1>
+    </div>
+</header>
 
+<main class="container mt-4">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <h2 class="text-center">עמוד כניסה</h2>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card justify-content-center mb-3">
+                <div class="card-header bg-success text-center text-white">
+                    <h4 class="card-title">כניסת סגל</h4>
+                </div>
+                <div class="card-body">
+                    <p>
+                        להוסיף כאן תיאור קצר על הכניסה לסגל
+                    </p>
+                </div>
+                <div class="card-footer d-grid">
+                    <a th:href="@{/admin}" class="btn btn-success">כנס</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-center text-white">
+                    <h4 class="card-title">כניסת סטודנטים</h4>
+                </div>
+                <div class="card-body">
+                    <p>
+                        להוסיף כאן תיאור קצר על הכניסה לסטודנטים
+                    </p>
+                </div>
+                <div class="card-footer d-grid">
+                    <a th:href="@{/user}" class="btn btn-primary">כנס</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header bg-warning text-center text-white">
+                    <h4 class="card-title">מעבר לחריגה</h4>
+                </div>
+                <div class="card-body">
+                    <p>
+                        לצורכי בדיקה
+                        <br>
+                        <b>למחוק לפני ההגשה</b>
+                    </p>
+                </div>
+                <div class="card-footer d-grid">
+                    <a th:href="@{/simulateError}" class="btn btn-warning text-white">עמוד חריגה</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="bg-light py-3">
+    <div class="container">
+        <p class="text-center">&copy; 2023 מכללת הדסה. כל הזכויות שמורות למרים בינימינס וסלומון דמה.</p>
+    </div>
+</footer>
 </body>
 </html>
