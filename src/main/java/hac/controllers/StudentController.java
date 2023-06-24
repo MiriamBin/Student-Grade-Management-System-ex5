@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 
-//@RequestMapping("/user")  TODO: uncomment this line
+@RequestMapping("/user")
 @Controller
 public class StudentController {
 
@@ -23,6 +23,11 @@ public class StudentController {
 
     @Autowired
     private CourseRepo courseRepo;
+
+    @GetMapping("")
+    public String adminIndex() {
+        return "redirect:/user/userCatalog";
+    }
 
     @GetMapping("/userCatalog")
     public String main(Model model, Principal principal) {

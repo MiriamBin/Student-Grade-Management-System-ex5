@@ -26,21 +26,21 @@ public class Default {
         return "login";
     }
 
-    /** User zone index. */
-    @GetMapping("/user")
-    public String userIndex() {
-        return "user/course-catalog";
-    }
-
-    /** Administration zone index.
-     * Note that we can access current logged user just by adding the Principal
-     * parameter
-     */
-    @RequestMapping("/admin")
-    public String adminIndex(Principal principal) {
-        System.out.println("Current logged user details: " + " (" + principal + ")" );
-        return "manage-courses";
-    }
+//    /** User zone index. */
+//    @GetMapping("/user")
+//    public String userIndex() {
+//        return "user/course-catalog";
+//    }
+//
+//    /** Administration zone index.
+//     * Note that we can access current logged user just by adding the Principal
+//     * parameter
+//     */
+//    @RequestMapping("/admin")
+//    public String adminIndex(Principal principal) {
+//        System.out.println("Current logged user details: " + " (" + principal + ")" );
+//        return "manage-courses";
+//    }
 
     @RequestMapping("/403")
     public String forbidden() {

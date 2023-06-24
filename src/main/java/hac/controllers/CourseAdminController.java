@@ -2,6 +2,8 @@ package hac.controllers;
 
 import hac.beans.Course;
 import hac.beans.CourseRepo;
+import hac.beans.DegreeRequirements;
+import hac.beans.DegreeRequirementsRepo;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,12 +11,22 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
+import java.util.List;
+
 @RequestMapping("/admin")
 @Controller
 public class CourseAdminController {
 
     @Autowired
     private CourseRepo courseRepo;
+
+    @Autowired
+    private DegreeRequirementsRepo degreeRequirementsRepo;
+
+    @GetMapping("")
+    public String adminIndex() {
+        return "redirect:/admin/manageCourses";
+    }
 
     @GetMapping("/manageCourses")
     public String main(Model model) {
@@ -85,6 +97,34 @@ public class CourseAdminController {
         model.addAttribute("courses", courseRepo.findAll());
 
         return "admin/manage-courses";
+    }
+
+    @GetMapping("/requirements")
+    public String showRequirementsPage(Model model) {
+        // degreeRequirementsRepo.save(new DegreeRequirements(1, 0, 0, 0));
+        List<DegreeRequirements> requirements = degreeRequirementsRepo.findAll();
+        model.addAttribute("requirements", requirements);
+        return "admin/requirements-page";
+    }
+
+    @GetMapping("/editDegreeRequirement/{id}")
+    public String showDegreeRequirementUpdateForm(@PathVariable("id") long id, Model model) {
+        DegreeRequirements requirement = degreeRequirementsRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid requirement Id:" + id));
+        model.addAttribute("requirement", requirement);
+        return "admin/edit-requirements";
+    }
+
+    @PostMapping("/updateDegreeRequirement")
+    public String updateDegreeRequirement(@RequestParam("id") long id, @Valid DegreeRequirements requirement, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            requirement.setId(id);
+            return "admin/edit-requirements";
+        }
+
+        degreeRequirementsRepo.save(requirement);
+        List<DegreeRequirements> requirements = degreeRequirementsRepo.findAll();
+        return "redirect:/admin/requirements";
     }
 
 //    @GetMapping("/delete/{id}")

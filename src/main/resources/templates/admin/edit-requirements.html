@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <title>ניהול קטלוג קורסים</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" rel="stylesheet">
+    <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" rel="stylesheet">
+
+</head>
+<body>
+
+<header class="bg-primary py-3">
+    <div class="container">
+        <h1 class="text-white">ניהול קורסים לסטודנטים</h1>
+        <div th:insert="navbar.html :: nav"></div>
+    </div>
+</header>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6">
+            <form action="#" th:action="@{/admin/updateDegreeRequirement}" th:object="${requirement}" method="post">
+                <!-- Add a hidden field for the requirement id -->
+                <input type="hidden" th:field="*{id}"/>
+                <!-- rest of the form fields -->
+                <div class="form-group">
+                    <label for="electiveCredits" class="col-form-label">נקודות זכות בחרים</label>
+                    <input type="number" th:field="*{electiveCredits}" class="form-control" id="electiveCredits" placeholder="נקודות זכות בחרים">
+                    <span th:if="${#fields.hasErrors('electiveCredits')}" th:errors="*{electiveCredits}" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="mandatoryCredits" class="col-form-label">נקודות זכות חובה</label>
+                    <input type="number" th:field="*{mandatoryCredits}" class="form-control" id="mandatoryCredits" placeholder="נקודות זכות חובה">
+                    <span th:if="${#fields.hasErrors('mandatoryCredits')}" th:errors="*{mandatoryCredits}" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="generalCredits" class="col-form-label">נקודות זכות כללי</label>
+                    <input type="number" th:field="*{generalCredits}" class="form-control" id="generalCredits" placeholder="נקודות זכות כללי">
+                    <span th:if="${#fields.hasErrors('generalCredits')}" th:errors="*{generalCredits}" class="text-danger"></span>
+                </div>
+                <div class="mt-5">
+                    <input type="submit" class="btn btn-primary" value="Update requirements">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
