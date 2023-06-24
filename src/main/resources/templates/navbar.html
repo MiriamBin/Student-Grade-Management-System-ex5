@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he" dir="rtl" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -20,8 +20,10 @@
       <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()') and #authorization.expression('hasRole(''ADMIN'')')}">
         <a class="nav-link text-white" th:href="@{/admin/requirements}" href="#">דרישות</a>
       </li>
-      <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
-        <a class="nav-link text-white" th:href="@{/logout}" href="#">התנתקות</a>
+      <li class="nav-item" sec:authorize="isAuthenticated()">
+        <form th:action="@{/logout}" method="post" style="display:inline">
+          <input type="submit" value="התנתקות" class="nav-link text-white"/>
+        </form>
       </li>
     </ul>
   </nav>

@@ -58,9 +58,15 @@ public class ApplicationConfig {
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
-//                                .loginProcessingUrl("/login")
-                               .defaultSuccessUrl("/", true)
-//                                .failureUrl("/")
+                        .successHandler((request, response, authentication) -> {
+                            if (authentication.getAuthorities().stream()
+                                    .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"))) {
+                                response.sendRedirect("/admin");
+                            } if (authentication.getAuthorities().stream()
+                                    .anyMatch(r -> r.getAuthority().equals("ROLE_USER"))) {
+                                response.sendRedirect("/user");
+                            }
+                        })
                         .permitAll()
                 )
                 .logout((logout) -> logout.permitAll())
