@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
 import java.util.List;
-
-@RequestMapping("/admin")
 @Controller
+@RequestMapping("/admin")
 public class CourseAdminController {
 
     @Autowired
@@ -39,24 +38,7 @@ public class CourseAdminController {
         return "admin/manage-courses";
     }
 
-    @PostMapping("/addCourse")
-    public String addCourse(@Valid Course course, BindingResult result, Model model) {
-        System.out.println("addCourse: " + course);
-        if (result.hasErrors()) {
-            return "admin/manage-courses";
-        }
-        if(courseRepo.existsByCourseName(course.getCourseName())){
-            model.addAttribute("message", "Course already exists.");
-            model.addAttribute("course", new Course());
-            model.addAttribute("courses", courseRepo.findAll());
-            return "admin/manage-courses";
-        }
-        courseRepo.save(course);
-        // pass the list of users to the view
-        model.addAttribute("course", new Course());
-        model.addAttribute("courses", courseRepo.findAll());
-        return "admin/manage-courses";
-    }
+
 
     @PostMapping("/delete")
     public String deleteUser(@RequestParam("id") long id, Model model) {
@@ -105,21 +87,16 @@ public class CourseAdminController {
 
     @GetMapping("/requirements")
     public String showRequirementsPage(Model model) {
+        model.addAttribute("requirement", new DegreeRequirements());
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
+       // model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
         return "admin/requirements-page";
     }
 
     @PostMapping("/deleteRequirements")
     public String deleteRequirements(@RequestParam("id") long id, Model model) {
-
-        System.out.println("deleteRequirements: " + id); //TODO: remove this line
-        // we throw an exception if the user is not found
-        // since we don't catch the exception here, it will fall back on an error page (see below)
-        DegreeRequirements requirement = degreeRequirementsRepo
-                .findById(id)
-                .orElseThrow(
-                        () -> new IllegalArgumentException("Invalid DegreeRequirements Id:" + id)
-                );
+        DegreeRequirements requirement = degreeRequirementsRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid DegreeRequirements Id:" + id));
         degreeRequirementsRepo.delete(requirement);
         return "redirect:/admin/requirements";
     }
@@ -133,15 +110,85 @@ public class CourseAdminController {
     }
 
     @PostMapping("/updateDegreeRequirement")
-    public String updateDegreeRequirement(@RequestParam("id") long id, @Valid DegreeRequirements requirement, BindingResult result, Model model) {
+    public String updateDegreeRequirement(@RequestParam("id") long id, @Valid DegreeRequirements requirement, BindingResult result) {
         if (result.hasErrors()) {
             requirement.setId(id);
             return "admin/edit-requirements";
         }
-
         degreeRequirementsRepo.save(requirement);
-        List<DegreeRequirements> requirements = degreeRequirementsRepo.findAll();
         return "redirect:/admin/requirements";
+    }
+
+//    @PostMapping("/addDegreeRequirement")
+//    public String addDegreeRequirement(@Valid DegreeRequirements requirement, BindingResult result, Model model) {
+//        System.out.println("addDegreeRequirement: " + requirement);
+//        if (result.hasErrors()) {
+//            return "admin/requirements-page";
+//        }
+//        if(!isDegreeRequirementExists(requirement.getRequirementName())){
+//            degreeRequirementsRepo.save(requirement);
+//            model.addAttribute("message", "דרישה נוספה בהצלחה.");
+//        }
+//        else {
+//            model.addAttribute("message", "דרישה כבר קיימת.");
+//        }
+//
+//        model.addAttribute("requirement", new DegreeRequirements());
+//        model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+//        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
+//        return "admin/requirements-page";
+//    }
+
+    @PostMapping("/addDegreeRequirement")
+    public String addDegreeRequirement(@Valid DegreeRequirements requirement, BindingResult result, Model model) {
+        System.out.println("addDegreeRequirement: " + requirement);
+        if (result.hasErrors()) {
+            return "admin/requirements-page";
+        }
+        if(courseRepo.existsByCourseName(requirement.getRequirementName())){
+            model.addAttribute("message", "דרישה כבר קיימת.");
+            model.addAttribute("requirement", new DegreeRequirements());
+            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
+            model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+            return "admin/requirements-page";
+        }
+        degreeRequirementsRepo.save(requirement);
+        // pass the list of users to the view
+        model.addAttribute("requirement", new DegreeRequirements());
+        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
+        model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+
+        return "admin/requirements-page";
+    }
+
+
+    @PostMapping("/addCourse")
+    public String addCourse(@Valid Course course, BindingResult result, Model model) {
+        System.out.println("addCourse: " + course);
+        if (result.hasErrors()) {
+            return "admin/manage-courses";
+        }
+        if(courseRepo.existsByCourseName(course.getCourseName())){
+            model.addAttribute("message", "Course already exists.");
+            model.addAttribute("course", new Course());
+            model.addAttribute("courses", courseRepo.findAll());
+            return "admin/manage-courses";
+        }
+        courseRepo.save(course);
+        // pass the list of users to the view
+        model.addAttribute("course", new Course());
+        model.addAttribute("courses", courseRepo.findAll());
+        return "admin/manage-courses";
+    }
+
+    private DegreeRequirements getTotalDegreeRequirement(){
+        String requirementName = "סך הכל נדרש";
+        Integer totalCredits = degreeRequirementsRepo.sumTotalMandatoryCredits();
+        return new DegreeRequirements(requirementName, totalCredits == null ? 0 : totalCredits);
+    }
+
+    private boolean isDegreeRequirementExists(String requirementName){
+        return degreeRequirementsRepo.existsByRequirementName(requirementName);
     }
 
 //    @GetMapping("/delete/{id}")

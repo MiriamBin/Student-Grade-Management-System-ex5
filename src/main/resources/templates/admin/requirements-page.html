@@ -17,15 +17,14 @@
         }
 
         .card-body {
-            padding: 1.5rem;
+
+        }
+        .table {
+            margin: 0;
         }
 
         .table th, .table td {
             text-align: center;
-        }
-
-        .btn-add {
-            margin-top: 1rem;
         }
 
         .btn-delete, .btn-edit {
@@ -50,6 +49,68 @@
             <h2 class="text-center m-4">דרישות לתואר במדעי המחשב</h2>
         </div>
     </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center">הוסף דרישה חדשה</h3>
+                    <hr>
+<!--                    <form action="#" method="post" th:action="@{/admin/addDegreeRequirement}" th:object="${requirement}">-->
+<!--                        <div class="row">-->
+<!--                            <div class="form-group col-md-6 mb-3">-->
+<!--                                <label for="requirementName">שם</label>-->
+<!--                                <input class="form-control" id="requirementName" placeholder="הזן שם" th:field="*{requirementName}" type="text">-->
+<!--                                <span class="text-danger" th:errors="*{requirementName}" th:if="${#fields.hasErrors('*{requirementName}')}" ></span>-->
+<!--                            </div>-->
+<!--                            <div class="form-group col-md-6 mb-3">-->
+<!--                                <label for="mandatoryCredits">נקודות זכות</label>-->
+<!--                                <input class="form-control" id="mandatoryCredits" placeholder="הזן נקודות זכות" th:field="*{mandatoryCredits}" type="number">-->
+<!--                                <span class="text-danger" th:errors="*{mandatoryCredits}" th:if="${#fields.hasErrors('*{mandatoryCredits}')}" ></span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+
+                        <form action="#" method="post" th:action="@{/admin/addDegreeRequirement}" th:object="${requirement}">
+                            <div class="row">
+                                <div class="form-group col-xs-12 col-md-6">
+                                    <label class="col-form-label" for="requirementName">שם</label>
+                                    <input class="form-control" id="requirementName" placeholder="שם" th:field="*{requirementName}" type="text">
+                                    <span class="text-danger" th:errors="*{requirementName}" th:if="${#fields.hasErrors('requirementName')}"></span>
+                                </div>
+                                <div class="form-group col-xs-12 col-md-6">
+                                    <label class="col-form-label" for="mandatoryCredits">נקודות זכות</label>
+                                    <input class="form-control" id="mandatoryCredits" placeholder="נקודות זכות" th:field="*{mandatoryCredits}" type="number">
+                                    <span class="text-danger" th:errors="*{mandatoryCredits}" th:if="${#fields.hasErrors('mandatoryCredits')}"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <input class="btn btn-primary" type="submit" value="הוסף קורס">
+                            </div>
+                        </form>
+
+<!--                        <div class="row justify-content-center">-->
+<!--                            <div class="col-md-4">-->
+<!--                                <a class="btn btn-secondary w-100" th:href="@{/admin/requirements}">ביטול</a>-->
+<!--                            </div>-->
+<!--                            <div class="col-md-4">-->
+<!--                                <button class="btn btn-primary w-100" type="submit">הוסף</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </form>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--    <div th:unless="${requirement}" class="row justify-content-center">-->
+<!--        <div class="col-md-8">-->
+<!--            <a class="btn btn-secondary w-100" th:href="@{/admin/newDegreeRequirement}">הוסף דרישה חדשה</a>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
+
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card justify-content-center m-3">
@@ -66,6 +127,13 @@
                         </tr>
                         </thead>
                         <tbody>
+<!--                        <tr th:if="${degreeRequirements.isEmpty()}">-->
+<!--                            <td colspan="4" class="text-center">-->
+<!--                                <div class="alert alert-primary mb-0">-->
+<!--                                    רשימת דרישות ריקה-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                        </tr>-->
                         <tr th:each="degreeRequirement:${degreeRequirements}">
                             <td th:text="${degreeRequirement.requirementName}"></td>
                             <td th:text="${degreeRequirement.getMandatoryCredits}"></td>
@@ -78,6 +146,12 @@
                             </td>
                         </tr>
                         </tbody>
+                        <tfoot>
+<!--                        <tr th:if="${totalDegreeRequirement}">-->
+<!--                            <th th:text="${totalDegreeRequirement.requirementName}"></th>-->
+<!--                            <th th:text="${totalDegreeRequirement.mandatoryCredits}"></th>-->
+<!--                            <th colspan="2">&nbsp;</th>-->
+<!--                        </tr>-->
                     </table>
                 </div>
             </div>

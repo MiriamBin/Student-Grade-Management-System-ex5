@@ -28,14 +28,18 @@ public class DegreeRequirements implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotNull(message = "שדה חובה")
-    @NotEmpty(message = "יש להזין שם")
-    @NotBlank(message = "יש להזין שם")
+//    @NotNull(message = "שדה חובה")
+//    @NotEmpty(message = "יש להזין שם")
+//    @NotBlank(message = "יש להזין שם")
+
+    @NotNull
+    @NotEmpty(message = "יש להוסיף שם")
     private String requirementName;
 
-    @NotNull(message = "שדה חובה")
-    @Min(message = "יש להזין ערך גדול מ-0", value = 1)
-    @Positive(message = "יש להזין ערך חיובי")
+//    @NotNull(message = "שדה חובה")
+//    @Min(message = "יש להזין ערך גדול מ-0", value = 1)
+//    @Positive(message = "יש להזין ערך חיובי")
+    @Positive(message = "Course credit must be positive")
     private Integer mandatoryCredits;
 
     public DegreeRequirements(String requirementName, Integer mandatoryCredits) {
