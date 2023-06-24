@@ -25,6 +25,10 @@ public class CourseAdminController {
 
     @GetMapping("")
     public String adminIndex() {
+        // TODO: for debugging only - remove this
+        degreeRequirementsRepo.save(new DegreeRequirements( "קורס חובה מדמ\"ח", 105));
+        degreeRequirementsRepo.save(new DegreeRequirements( "קורס בחירה מדמ\"ח", 5));
+        degreeRequirementsRepo.save(new DegreeRequirements( "קורס בחירה כללי", 45));
         return "redirect:/admin/manageCourses";
     }
 
@@ -101,17 +105,30 @@ public class CourseAdminController {
 
     @GetMapping("/requirements")
     public String showRequirementsPage(Model model) {
-        // degreeRequirementsRepo.save(new DegreeRequirements(1, 0, 0, 0));
-        List<DegreeRequirements> requirements = degreeRequirementsRepo.findAll();
-        model.addAttribute("requirements", requirements);
+        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
         return "admin/requirements-page";
+    }
+
+    @PostMapping("/deleteRequirements")
+    public String deleteRequirements(@RequestParam("id") long id, Model model) {
+
+        System.out.println("deleteRequirements: " + id); //TODO: remove this line
+        // we throw an exception if the user is not found
+        // since we don't catch the exception here, it will fall back on an error page (see below)
+        DegreeRequirements requirement = degreeRequirementsRepo
+                .findById(id)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Invalid DegreeRequirements Id:" + id)
+                );
+        degreeRequirementsRepo.delete(requirement);
+        return "redirect:/admin/requirements";
     }
 
     @GetMapping("/editDegreeRequirement/{id}")
     public String showDegreeRequirementUpdateForm(@PathVariable("id") long id, Model model) {
-        DegreeRequirements requirement = degreeRequirementsRepo.findById(id)
+        DegreeRequirements degreeRequirement = degreeRequirementsRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid requirement Id:" + id));
-        model.addAttribute("requirement", requirement);
+        model.addAttribute("degreeRequirement", degreeRequirement);
         return "admin/edit-requirements";
     }
 

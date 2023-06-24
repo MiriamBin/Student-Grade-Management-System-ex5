@@ -1,12 +1,14 @@
 package hac.beans;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,28 +16,30 @@ import java.io.Serializable;
 @Entity
 @Getter
 @Setter
-//@NoArgsConstructor
-@AllArgsConstructor
+@ToString
+@NoArgsConstructor
+//@AllArgsConstructor
 public class DegreeRequirements implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotNull(message = "mandatory field")
-    private Integer electiveCredits;
+    @NotNull(message = "שדה חובה")
+    @NotEmpty(message = "יש להזין שם")
+    @NotBlank(message = "יש להזין שם")
+    private String requirementName;
 
-    @NotNull(message = "mandatory field")
+    @NotNull(message = "שדה חובה")
+    @Min(message = "יש להזין ערך גדול מ-0", value = 1)
+    @Positive(message = "יש להזין ערך חיובי")
     private Integer mandatoryCredits;
 
-    @NotNull(message = "mandatory field")
-    private Integer generalCredits;
-
-    public DegreeRequirements() {
-        this.electiveCredits = 0;
-        this.mandatoryCredits = 0;
-        this.generalCredits = 0;
+    public DegreeRequirements(String requirementName, Integer mandatoryCredits) {
+        this.requirementName = requirementName;
+        this.mandatoryCredits = mandatoryCredits;
     }
 }
