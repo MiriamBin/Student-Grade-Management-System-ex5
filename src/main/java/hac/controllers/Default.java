@@ -1,6 +1,9 @@
 package hac.controllers;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,11 +24,23 @@ public class Default {
         return "index";
     }
 
+
     @GetMapping("/login")
     public String login() {
-        return "login";
-    }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        if (auth != null && !auth.getName().equals("anonymousUser")) {
+            for (GrantedAuthority authority : auth.getAuthorities()) {
+                if (authority.getAuthority().equals("ROLE_ADMIN")) {
+                    return "redirect:/admin";
+                } else if (authority.getAuthority().equals("ROLE_USER")) {
+                    return "redirect:/user";
+                }
+            }
+        }
+
+        return "login"; // Otherwise, show them the login page
+    }
 //    /** User zone index. */
 //    @GetMapping("/user")
 //    public String userIndex() {
