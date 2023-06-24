@@ -52,7 +52,7 @@ public class ApplicationConfig {
                 .csrf(withDefaults())
 
                 .authorizeHttpRequests((requests) -> requests
-                                .requestMatchers( "/", "/error","/images/**").permitAll()
+                                .requestMatchers( "/", "/error","/images/**", "/403").permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/user/**", "/userCatalog", "/myCourses", "/addToStudentList").hasRole("USER")
                 )
