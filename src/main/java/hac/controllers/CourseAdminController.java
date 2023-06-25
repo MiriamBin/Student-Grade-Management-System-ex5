@@ -86,7 +86,7 @@ public class CourseAdminController {
 
     @GetMapping("/requirements")
     public String showRequirementsPage(Model model) {
-        model.addAttribute("degreeRequirement", new DegreeRequirement());
+        //model.addAttribute("degreeRequirement", new DegreeRequirement());
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
         model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
         return "admin/requirements-page";
@@ -137,23 +137,41 @@ public class CourseAdminController {
 //        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
 //        return "admin/requirements-page";
 //    }
+@GetMapping("/newDegreeRequirement")
+public String newDegreeRequirement(Model model) {
+    model.addAttribute("degreeRequirement", new DegreeRequirement());
+    model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
+    model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+    return "admin/requirements-page";
+}
 
     @PostMapping("/addDegreeRequirement")
     public String addDegreeRequirement(@Valid DegreeRequirement degreeRequirement, BindingResult result, Model model) {
+
+
         System.out.println("addDegreeRequirement: " + degreeRequirement);
         if (result.hasErrors()) {
             model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
             model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
             return "admin/requirements-page";
         }
+        String requirementDegreeName = degreeRequirement.getRequirementName();
         if(degreeRequirementsRepo.existsByRequirementName(degreeRequirement.getRequirementName())){
-            model.addAttribute("message", "דרישה כבר קיימת.");
+            String existMessage = String.format("סוג הקורסים  \"%s\" כבר קיים.", requirementDegreeName);
+            model.addAttribute("existMessage", existMessage);
             model.addAttribute("degreeRequirement", new DegreeRequirement());
             model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
             model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
-            return "admin/requirements-page";
         }
-        degreeRequirementsRepo.save(degreeRequirement);
+        else {
+            String addedMessage = String.format("סוג הקורסים \"%s\" נוספה בהצלחה.", requirementDegreeName);
+            degreeRequirementsRepo.save(degreeRequirement);
+            model.addAttribute("addedMessage", addedMessage);
+            model.addAttribute("degreeRequirement", new DegreeRequirement());
+            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
+            model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+        }
+
         // pass the list of users to the view
         model.addAttribute("degreeRequirement", new DegreeRequirement());
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
@@ -161,7 +179,6 @@ public class CourseAdminController {
 
         return "admin/requirements-page";
     }
-
 
     @PostMapping("/addCourse")
     public String addCourse(@Valid Course course, BindingResult result, Model model) {

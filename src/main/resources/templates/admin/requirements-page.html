@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <div class="row justify-content-center">
+    <div th:if="${degreeRequirement}" class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
@@ -82,8 +82,12 @@
                             <input type="number" th:field="*{mandatoryCredits}" class="form-control" id="mandatoryCredits" placeholder="נקודות זכות חובה">
                             <span th:if="${#fields.hasErrors('mandatoryCredits')}" th:errors="*{mandatoryCredits}" class="text-danger"></span>
                         </div>
-                        <div class="mt-5">
-                            <input type="submit" class="btn btn-primary" value="שמור שינויים">
+                        <div class="col mt-3">
+                            <button class="btn btn-primary w-100" type="submit">הוסף</button>
+                        </div>
+
+                        <div class="col mt-3">
+                            <a class="btn btn-secondary w-100" th:href="@{/admin/requirements}">ביטול</a>
                         </div>
                     </form>
 
@@ -120,13 +124,23 @@
         </div>
     </div>
 
-    <!--    <div th:unless="${requirement}" class="row justify-content-center">-->
-    <!--        <div class="col-md-8">-->
-    <!--            <a class="btn btn-secondary w-100" th:href="@{/admin/newDegreeRequirement}">הוסף דרישה חדשה</a>-->
-    <!--        </div>-->
-    <!--    </div>-->
+    <div th:unless="${degreeRequirement}" class="row justify-content-center">
+        <div class="col-md-8">
+            <a class="btn btn-secondary w-100" th:href="@{/admin/newDegreeRequirement}">הוסף דרישה חדשה</a>
+        </div>
+    </div>
 
+    <div th:if="${addedMessage}" class="row justify-content-center">
+        <div class="alert alert-success col-md-8 m-3 text-center">
+            <span th:text="${addedMessage}"></span>
+        </div>
+    </div>
 
+    <div th:if="${existMessage}" class="row justify-content-center">
+        <div class="alert alert-danger col-md-8 m-3 text-center">
+            <span th:text="${existMessage}"></span>
+        </div>
+    </div>
 
     <div class="row justify-content-center">
         <div class="col-md-12">
