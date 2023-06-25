@@ -36,6 +36,7 @@ public class CourseAdminController {
     public String manageCourses(Model model) {
         model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
+        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
         return "admin/manage-courses";
     }
     @PostMapping("/delete")
@@ -64,8 +65,6 @@ public class CourseAdminController {
         model.addAttribute("courses", courseRepo.findAll());
         return "redirect:/admin/manageCourses";
     }
-
-
 
 //    @PostMapping("/delete")
 //    public String deleteUser(@RequestParam("id") long id, Model model) {
@@ -198,12 +197,14 @@ public String newDegreeRequirement(Model model) {
             model.addAttribute("message", "Course already exists.");
             model.addAttribute("course", new Course());
             model.addAttribute("courses", courseRepo.findAll());
+            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
             return "admin/manage-courses";
         }
         courseRepo.save(course);
         // pass the list of users to the view
         model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
+        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
         return "admin/manage-courses";
     }
 

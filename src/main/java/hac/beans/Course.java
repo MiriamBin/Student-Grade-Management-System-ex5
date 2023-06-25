@@ -33,4 +33,7 @@ public class Course implements Serializable {
 
     @Positive(message = "Course credit must be positive")
     private int credit;
+
+    @NotEmpty(message = "יש להוסיף שם")
+    private String requirementType;
 }

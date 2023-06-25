@@ -46,10 +46,19 @@
                     <input class="form-control" id="credit" placeholder="נקודות זכות" th:field="*{credit}" type="number">
                     <span class="text-danger" th:errors="*{credit}" th:if="${#fields.hasErrors('credit')}"></span>
                 </div>
+                <div class="form-group col-xs-12 col-md-6">
+                    <label class="col-form-label" for="requirementType">שם דרישה</label>
+                    <select class="form-control" id="requirementType" th:field="*{requirementType}">
+                        <option th:each="requirementName : ${degreeRequirements}" th:value="${requirementName}" th:text="${requirementName}"></option>
+                    </select>
+                    <span class="text-danger" th:errors="*{requirementType}" th:if="${#fields.hasErrors('requirementType')}"></span>
+                </div>
             </div>
             <div class="row">
                 <input class="btn btn-primary" type="submit" value="הוסף קורס">
             </div>
+
+
         </form>
     </section>
 
@@ -78,8 +87,7 @@
                                 <tbody>
                                 <tr th:each="course : ${courses}">
                                     <td th:text="${course.courseName}"></td>
-                                    <!--<td th:text="${course.courseType}"></td>-->
-                                    <td>להוסיף סוג</td>
+                                    <td th:text="${course.requirementType}"></td>
                                     <td th:text="${course.credit}"></td>
 
                                     <td>
