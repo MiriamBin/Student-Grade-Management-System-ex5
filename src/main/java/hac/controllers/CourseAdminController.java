@@ -86,20 +86,17 @@ public class CourseAdminController {
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
         System.out.println("showUpdateForm: " + id); //TODO: remove this line
         Course course = courseRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
+        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
 
         // the name "course"  is bound to the VIEW
         model.addAttribute("course", course);
         return "admin/edit-courses";
     }
 
-    @GetMapping("/update/{id}")
-    public String updateUserGet() {
-        return "redirect:/";
-    }
-
     @PostMapping("/update")
     public String updateCourse(@RequestParam("id") long id, @Valid Course course, BindingResult result, Model model) {
         System.out.println("updateUser: " + course);
+        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
         if (result.hasErrors()) {
             course.setId(id);
             return "admin/edit-courses";
@@ -107,7 +104,6 @@ public class CourseAdminController {
         course.setId(id);
         courseRepo.save(course);
         model.addAttribute("courses", courseRepo.findAll());
-
         return "admin/manage-courses";
     }
 

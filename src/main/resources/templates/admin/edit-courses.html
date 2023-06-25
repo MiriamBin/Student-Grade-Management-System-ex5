@@ -8,7 +8,6 @@
 </head>
 
 <body>
-
 <div class="container my-5">
     <h2 class="mb-5">ערוך קורס</h2>
     <div class="row">
@@ -27,6 +26,13 @@
                         <label for="credit" class="col-form-label">נקודות זכות</label>
                         <input type="number" th:field="*{credit}" class="form-control" id="credit" placeholder="נקודות זכות">
                         <span th:if="${#fields.hasErrors('credit')}" th:errors="*{credit}" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-xs-12 col-md-6">
+                        <label class="col-form-label" for="requirementType">שם דרישה</label>
+                        <select class="form-control" id="requirementType" th:field="*{requirementType}">
+                            <option th:each="requirementName : ${degreeRequirements}" th:value="${requirementName}" th:text="${requirementName}"></option>
+                        </select>
+                        <span class="text-danger" th:errors="*{requirementType}" th:if="${#fields.hasErrors('requirementType')}"></span>
                     </div>
                 </div>
                 <div class="row">

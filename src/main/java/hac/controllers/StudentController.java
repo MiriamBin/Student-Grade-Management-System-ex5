@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
@@ -27,8 +29,37 @@ public class StudentController {
     private UserCoursesRepo userCoursesRepo;
 
     @GetMapping("")
-    public String userHomePage() {
-        return "redirect:/user/userCatalog";
+    public String userHomePage(Model model, Principal principal) {
+        List<UserCourses> userCourses = userCoursesRepo.findByUsername(principal.getName());
+        Double sum = 0.0;
+        Integer count = 0;
+        Integer countCompletedCredits = 0;
+        Integer countInProgressCredits = 0;
+        Integer countRemainingCredits = 0;
+        Integer countTotalCredits = 0;
+
+        for (UserCourses uc : userCourses) {
+            if (uc.getGrade() != null) {
+                sum += (uc.getGrade() * uc.getCourse().getCredit());
+                count++;
+                countCompletedCredits += uc.getCourse().getCredit();
+            } else {
+                countInProgressCredits += uc.getCourse().getCredit();
+            }
+            countTotalCredits += uc.getCourse().getCredit();
+        }
+
+        Double gpa = sum / countCompletedCredits;
+        gpa = Double.isNaN(gpa) ? 0.0 : gpa;
+        model.addAttribute("gpa", String.format("%.2f", gpa));
+
+
+//        Double gpa = userCoursesRepo.calculateGPAForUser(principal.getName());
+//        model.addAttribute("gpa", gpa);
+////        Integer count = userCoursesRepo.countCoursesWithGradeForUser(principal.getName()).intValue();
+////        model.addAttribute("count", count);
+
+        return "user/home-page";
     }
 
     @GetMapping("/userCatalog")

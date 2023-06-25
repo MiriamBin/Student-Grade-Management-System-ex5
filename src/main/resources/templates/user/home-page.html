@@ -1,11 +1,53 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
-    <title>HOME PAGE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>קטלוג קורסים</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
 
+<header class="bg-primary py-3">
+    <div class="container">
+        <h1 class="text-white">ניהול קורסים לסטודנטים</h1>
+        <div th:insert="navbar.html :: nav"></div>
+    </div>
+</header>
+
+<main class="container py-4">
+    <section>
+
+        <div class="row">
+            <div th:if="${gpa}" class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-center text-white">
+                        <h4 class="card-title">התואר</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <th>ממוצע</th>
+                                    <td th:text="${gpa}"></td>
+                                </tr>
+<!--                                <tr>-->
+<!--                                    <th>קורסים</th>-->
+<!--                                    <td>36 מתוך 39</td>-->
+<!--                                </tr>-->
+<!--                                <tr>-->
+<!--                                    <th>נקודות זכות</th>-->
+<!--                                    <td>128 מתוך 141</td>-->
+<!--                                </tr>-->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
 </body>
 </html>
