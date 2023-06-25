@@ -53,6 +53,10 @@
         </form>
     </section>
 
+    <section>
+        <div class="alert alert-danger" th:if="${message}" th:text="${message}"></div>
+    </section>
+
     <section class="py-3">
         <div class="row">
             <div class="col-md-12">

@@ -1,11 +1,22 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>4XX Error page</title>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>403</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
 </head>
-<body>
-<h1>Access denied</h1>
-<a th:href="@{/}">Back to Home Page</a>
+<body class="d-flex justify-content-center align-items-center vh-100">
+<div class="container text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="display-4 text-danger">Oops...</h1>
+            <p class="lead">הגישה לעמוד נדחתה</p>
+            <a th:href="@{/}" class="btn btn-primary m-3">חזור לעמוד הבית</a>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

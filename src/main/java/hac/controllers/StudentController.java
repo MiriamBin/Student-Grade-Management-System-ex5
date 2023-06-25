@@ -30,8 +30,8 @@ public class StudentController {
     }
 
     @GetMapping("/userCatalog")
-    public String main(Model model, Principal principal) {
-        System.out.println("userCatalog:!!!!!!!!!!!!!!!!!!! " );
+    public String userCatalog(Model model, Principal principal) {
+        System.out.println("userCatalog:!!!!!!!!!!!!!!!!!!! " ); //TODO: TO DELETE
         model.addAttribute("courses", courseRepo.findAll());
         model.addAttribute("userCourses", userCoursesRepo.findByUsername(principal.getName()));
 
@@ -48,7 +48,7 @@ public class StudentController {
                         () -> new IllegalArgumentException("Invalid user Id:" + id)
                 );
 
-        UserCourses existingUserCourses = userCoursesRepo.findByCourseAndUsername(newCourse, "Shlomo");
+        UserCourses existingUserCourses = userCoursesRepo.findByCourseAndUsername(newCourse, "Shlomo"); //TODO: change the username to the correct value
         if (existingUserCourses == null) {
             userCoursesRepo.save( new UserCourses(newCourse,principal.getName(),90) ); //TODO: change the grade to the correct value
             System.out.println("courseRepo: " + userCoursesRepo.findAll());
@@ -68,7 +68,7 @@ public class StudentController {
         UserCourses userCourse = userCoursesRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
         userCoursesRepo.delete(userCourse);
-        System.out.println("deleteCourse1111111: " + id);
+        System.out.println("deleteCourse1111111: " + id); //TODO: TO DELETE
         model.addAttribute("message", "Course deleted successfully.");
         model.addAttribute("courses", courseRepo.findAll());
         model.addAttribute("userCourses", userCoursesRepo.findAll());
@@ -82,9 +82,9 @@ public class StudentController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
         userCourse.setGrade(grade);
         userCoursesRepo.save(userCourse);
-        System.out.println("editCourseGrade2222222222222");
+        System.out.println("editCourseGrade2222222222222"); //TODO: TO DELETE
 
-        model.addAttribute("message", "Course grade edited successfully.");
+        model.addAttribute("message", "Course grade edited successfully."); // TOdo: change the message
         model.addAttribute("courses", courseRepo.findAll());
         model.addAttribute("userCourses", userCoursesRepo.findAll());
 
@@ -93,7 +93,7 @@ public class StudentController {
 
     @GetMapping("/myCourses")
     public String myCourses(Model model, Principal principal) {
-        System.out.println("myCourses6666666666666666");
+        System.out.println("myCourses6666666666666666"); //TODO: TO DELETE
         model.addAttribute("courses", courseRepo.findAll());
         model.addAttribute("userCourses", userCoursesRepo.findAll());
         model.addAttribute("userCourses", userCoursesRepo.findByUsername(principal.getName()));

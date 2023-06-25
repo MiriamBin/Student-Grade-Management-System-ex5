@@ -1,9 +1,6 @@
 package hac.controllers;
 
-import hac.beans.Course;
-import hac.beans.CourseRepo;
-import hac.beans.DegreeRequirement;
-import hac.beans.DegreeRequirementsRepo;
+import hac.beans.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,12 +8,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/admin")
 public class CourseAdminController {
 
     @Autowired
     private CourseRepo courseRepo;
+
+    @Autowired
+    private UserCoursesRepo userCoursesRepo;
 
     @Autowired
     private DegreeRequirementsRepo degreeRequirementsRepo;
@@ -31,33 +33,59 @@ public class CourseAdminController {
     }
 
     @GetMapping("/manageCourses")
-    public String main(Model model) {
+    public String manageCourses(Model model) {
         model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
         return "admin/manage-courses";
     }
-
-
-
     @PostMapping("/delete")
-    public String deleteUser(@RequestParam("id") long id, Model model) {
+    public String deleteCourse(@RequestParam("id") long id, Model model) {
 
-        System.out.println("deleteUser: " + id); //TODO: remove this line
+        System.out.println("deleteCourse: " + id); //TODO: remove this line
         // we throw an exception if the user is not found
         // since we don't catch the exception here, it will fall back on an error page (see below)
-        Course user = courseRepo
+        Course course = courseRepo
                 .findById(id)
                 .orElseThrow(
-                        () -> new IllegalArgumentException("Invalid user Id:" + id)
+                        () -> new IllegalArgumentException("Invalid course Id:" + id)
                 );
-        courseRepo.delete(user);
-        model.addAttribute("users", courseRepo.findAll());
+
+        List<UserCourses> userCourses = userCoursesRepo.findByCourseId(id);
+        if(!userCourses.isEmpty()) {
+            model.addAttribute("message", "לא ניתן למחוק קורס שהוקצה לסטודנטים");
+            model.addAttribute("course", new Course());
+            model.addAttribute("courses", courseRepo.findAll());
+
+            return "admin/manage-courses";
+        } else {
+            courseRepo.delete(course);
+        }
+
+        model.addAttribute("courses", courseRepo.findAll());
         return "redirect:/admin/manageCourses";
     }
 
+
+
+//    @PostMapping("/delete")
+//    public String deleteUser(@RequestParam("id") long id, Model model) {
+//
+//        System.out.println("deleteUser: " + id); //TODO: remove this line
+//        // we throw an exception if the user is not found
+//        // since we don't catch the exception here, it will fall back on an error page (see below)
+//        Course user = courseRepo
+//                .findById(id)
+//                .orElseThrow(
+//                        () -> new IllegalArgumentException("Invalid user Id:" + id)
+//                );
+//        courseRepo.delete(user);
+//        model.addAttribute("users", courseRepo.findAll());
+//        return "redirect:/admin/manageCourses";
+//    }
+
     @GetMapping("/editCourse/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
-        System.out.println("showUpdateForm: " + id);
+        System.out.println("showUpdateForm: " + id); //TODO: remove this line
         Course course = courseRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
 
         // the name "course"  is bound to the VIEW
@@ -86,7 +114,6 @@ public class CourseAdminController {
 
     @GetMapping("/requirements")
     public String showRequirementsPage(Model model) {
-        //model.addAttribute("degreeRequirement", new DegreeRequirement());
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
         model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
         return "admin/requirements-page";
@@ -118,25 +145,6 @@ public class CourseAdminController {
         return "redirect:/admin/requirements";
     }
 
-//    @PostMapping("/addDegreeRequirement")
-//    public String addDegreeRequirement(@Valid DegreeRequirements requirement, BindingResult result, Model model) {
-//        System.out.println("addDegreeRequirement: " + requirement);
-//        if (result.hasErrors()) {
-//            return "admin/requirements-page";
-//        }
-//        if(!isDegreeRequirementExists(requirement.getRequirementName())){
-//            degreeRequirementsRepo.save(requirement);
-//            model.addAttribute("message", "דרישה נוספה בהצלחה.");
-//        }
-//        else {
-//            model.addAttribute("message", "דרישה כבר קיימת.");
-//        }
-//
-//        model.addAttribute("requirement", new DegreeRequirements());
-//        model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
-//        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
-//        return "admin/requirements-page";
-//    }
 @GetMapping("/newDegreeRequirement")
 public String newDegreeRequirement(Model model) {
     model.addAttribute("degreeRequirement", new DegreeRequirement());
