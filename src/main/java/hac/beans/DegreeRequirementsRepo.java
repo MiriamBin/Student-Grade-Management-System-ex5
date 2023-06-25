@@ -3,10 +3,10 @@ package hac.beans;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface DegreeRequirementsRepo extends JpaRepository<DegreeRequirements, Long> {
+public interface DegreeRequirementsRepo extends JpaRepository<DegreeRequirement, Long> {
     boolean existsByRequirementName(String requirementName);
 
-    @Query("SELECT SUM(d.mandatoryCredits) FROM DegreeRequirements d")
+    @Query("SELECT SUM(d.mandatoryCredits) FROM DegreeRequirement d")
     Integer sumTotalMandatoryCredits();
 
 

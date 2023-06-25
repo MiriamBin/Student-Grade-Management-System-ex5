@@ -19,7 +19,7 @@ import java.io.Serializable;
 @ToString
 @NoArgsConstructor
 //@AllArgsConstructor
-public class DegreeRequirements implements Serializable {
+public class DegreeRequirement implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -28,21 +28,15 @@ public class DegreeRequirements implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-//    @NotNull(message = "שדה חובה")
-//    @NotEmpty(message = "יש להזין שם")
-//    @NotBlank(message = "יש להזין שם")
-
-    @NotNull
-    @NotEmpty(message = "יש להוסיף שם")
+    @NotEmpty(message = "שדה חובה")
+    @NotBlank(message = "יש להזין אותיות")
     private String requirementName;
 
-//    @NotNull(message = "שדה חובה")
-//    @Min(message = "יש להזין ערך גדול מ-0", value = 1)
-//    @Positive(message = "יש להזין ערך חיובי")
-    @Positive(message = "Course credit must be positive")
+    @NotNull(message = "שדה חובה")
+    @Min(message = "יש להזין ערך גדול מ-0", value = 1)
     private Integer mandatoryCredits;
 
-    public DegreeRequirements(String requirementName, Integer mandatoryCredits) {
+    public DegreeRequirement(String requirementName, Integer mandatoryCredits) {
         this.requirementName = requirementName;
         this.mandatoryCredits = mandatoryCredits;
     }
