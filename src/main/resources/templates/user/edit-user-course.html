@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>קטלוג קורסים</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+
+<div class="container my-5">
+    <h2 class="mb-5">Update Course</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <form action="#" th:action="@{/user/updateCourse}" th:object="${userCourses}" method="post">
+                <input type="hidden" th:field="*{id}"/>
+                <input type="hidden" th:field="*{course}"/>
+                <input type="hidden" th:field="*{username}"/>
+                <div>
+                    <label for="courseName">שם הקורס:</label>
+                    <span id="courseName" th:text="${userCourses.course.courseName}"></span>
+                </div>
+                <div>
+                    <label for="courseType">סוג הקורס:</label>
+                    <span id="courseType" th:text="${userCourses.course.requirementType}"></span>
+                </div>
+                <div>
+                    <label for="credit">נקודות זכות:</label>
+                    <span id="credit" th:text="${userCourses.course.credit}"></span>
+                </div>
+                <div>
+                    <label for="grade" class="col-form-label">ציון הקורס:</label>
+                    <input type="number" th:field="*{grade}" class="form-control" id="grade" placeholder="grade">
+                    <span th:if="${#fields.hasErrors('grade')}" th:errors="*{grade}" class="text-danger"></span>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-md-6">
+                        <input type="submit" class="btn btn-primary" value="שמור">
+                    </div>
+                    <div class="col-md-6">
+                        <a class="btn btn-secondary" th:href="@{/user/myCourses}">ביטול</a>
+                    </div>
+                </div>
+                <div th:if="${#fields.hasGlobalErrors()}" class="text-danger">
+                    <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

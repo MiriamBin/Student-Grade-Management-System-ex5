@@ -1,7 +1,7 @@
 package hac.beans;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.io.Serial;
@@ -22,9 +22,10 @@ public class UserCourses implements Serializable {
     @ManyToOne
     private Course course;
 
-    @NotEmpty(message = "Username is mandatory")
     private String username;
 
+    @Min(message = "יש להזין ציון בין 0 ל-100", value = 0)
+    @Max(message = "יש להזין ציון בין 0 ל-100", value = 100)
     private Integer grade;
 
     public UserCourses() {}

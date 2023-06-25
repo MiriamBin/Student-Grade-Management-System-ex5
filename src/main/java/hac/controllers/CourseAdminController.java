@@ -189,8 +189,9 @@ public String newDegreeRequirement(Model model) {
 
     @PostMapping("/addCourse")
     public String addCourse(@Valid Course course, BindingResult result, Model model) {
-        System.out.println("addCourse: " + course);
         if (result.hasErrors()) {
+            model.addAttribute("courses", courseRepo.findAll());
+            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
             return "admin/manage-courses";
         }
         if(courseRepo.existsByCourseName(course.getCourseName())){

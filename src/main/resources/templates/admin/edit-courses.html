@@ -10,7 +10,7 @@
 <body>
 
 <div class="container my-5">
-    <h2 class="mb-5">Update Course</h2>
+    <h2 class="mb-5">ערוך קורס</h2>
     <div class="row">
         <div class="col-md-6">
             <form action="#" th:action="@{/admin/update}" th:object="${course}" method="post">
@@ -19,19 +19,19 @@
                 <!-- rest of the form fields -->
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label for="courseName" class="col-form-label">Name</label>
-                        <input type="text" th:field="*{courseName}" class="form-control" id="courseName" placeholder="Name">
+                        <label for="courseName" class="col-form-label">שם הקורס</label>
+                        <input type="text" th:field="*{courseName}" class="form-control" id="courseName" placeholder="שם הקורס">
                         <span th:if="${#fields.hasErrors('courseName')}" th:errors="*{courseName}" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="credit" class="col-form-label">Credit</label>
-                        <input type="number" th:field="*{credit}" class="form-control" id="credit" placeholder="Credit">
+                        <label for="credit" class="col-form-label">נקודות זכות</label>
+                        <input type="number" th:field="*{credit}" class="form-control" id="credit" placeholder="נקודות זכות">
                         <span th:if="${#fields.hasErrors('credit')}" th:errors="*{credit}" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mt-5">
-                        <input type="submit" class="btn btn-primary" value="Update Course">
+                        <input type="submit" class="btn btn-primary" value="שמור שינויים">
                     </div>
                 </div>
             </form>
