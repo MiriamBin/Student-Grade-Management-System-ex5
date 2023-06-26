@@ -13,9 +13,7 @@
 
         .card-header {
             text-align: center;
-
         }
-
         .card-body {
 
         }
@@ -134,11 +132,12 @@
                         </tr>
                         </tbody>
                         <tfoot>
-                        <!--                        <tr th:if="${totalDegreeRequirement}">-->
-                        <!--                            <th th:text="${totalDegreeRequirement.requirementName}"></th>-->
-                        <!--                            <th th:text="${totalDegreeRequirement.mandatoryCredits}"></th>-->
-                        <!--                            <th colspan="2">&nbsp;</th>-->
-                        <!--                        </tr>-->
+                        <tr th:if="${totalDegreeRequirement}">
+                            <th th:text="${totalDegreeRequirement.requirementName}"></th>
+                            <th th:text="${totalDegreeRequirement.mandatoryCredits}"></th>
+                            <th colspan="2">&nbsp;</th>
+                        </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
