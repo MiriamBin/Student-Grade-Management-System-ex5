@@ -3,14 +3,12 @@ package hac;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -19,21 +17,17 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder bCryptPasswordEncoder) {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("a")
-                .password(bCryptPasswordEncoder.encode("a"))
-                .roles("USER")
-                .build());
-        manager.createUser(User.withUsername("b")
-                .password(bCryptPasswordEncoder.encode("b"))
-                .roles("USER")
-                .build());
-        manager.createUser(User.withUsername("s")
-                .password(bCryptPasswordEncoder.encode("s"))
+        manager.createUser(User.withUsername("Solange")
+                .password(bCryptPasswordEncoder.encode("SolangeAdmin"))
                 .roles("ADMIN")
                 .build());
-        manager.createUser(User.withUsername("useradmin")
-                .password(bCryptPasswordEncoder.encode("password"))
-                .roles("USER", "ADMIN")
+        manager.createUser(User.withUsername("Miriam")
+                .password(bCryptPasswordEncoder.encode("MiriamUser"))
+                .roles("USER")
+                .build());
+        manager.createUser(User.withUsername("Shlomo")
+                .password(bCryptPasswordEncoder.encode("ShlomoUser"))
+                .roles("USER")
                 .build());
 
         return manager;
@@ -52,9 +46,9 @@ public class ApplicationConfig {
                 .csrf(withDefaults())
 
                 .authorizeHttpRequests((requests) -> requests
-                                .requestMatchers( "/", "/error","/images/**", "/403").permitAll()
+                                .requestMatchers( "/", "/error", "/403").permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/user/**", "/userCatalog", "/myCourses", "/addToStudentList").hasRole("USER")
+                                .requestMatchers("/user/**").hasRole("USER")
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
@@ -70,18 +64,9 @@ public class ApplicationConfig {
                         .permitAll()
                 )
                 .logout((logout) -> logout.permitAll())
-                .exceptionHandling(
-                        (exceptionHandling) -> exceptionHandling
-                                .accessDeniedPage("/403")
+                .exceptionHandling((exceptionHandling) -> exceptionHandling.accessDeniedPage("/403")
                 );
         return http.build();
 
     }
-
-//// instead of defining open path in the method above you can do it here:
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring().requestMatchers("/favicon.ico");
-//    }
-
 }

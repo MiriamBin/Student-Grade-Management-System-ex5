@@ -6,6 +6,20 @@
     <title>התחברות</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
+<style>
+    body {
+        text-align: right;
+    }
+    .card-header {
+        text-align: center;
+    }
+    .table {
+        margin: 0;
+    }
+    .table th, .table td {
+        text-align: center;
+    }
+</style>
 <body>
 <header class="bg-primary py-3">
     <div class="container">
@@ -14,11 +28,11 @@
 </header>
 
 <main>
-    <div class="container mt-5">
+    <div class="container mt-3">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-6 mt-2">
                 <div class="card">
-                    <div class="card-header bg-primary text-center text-white">
+                    <div class="card-header bg-primary text-white">
                         <h4 class="card-title">התחבר</h4>
                     </div>
                     <div class="card-body">
@@ -28,7 +42,6 @@
                         <div th:if="${param.logout}" class="alert alert-success text-center">
                             התנתקת בהצלחה.
                         </div>
-
                         <form th:action="@{/login}" method="post">
                             <div class="mb-3">
                                 <label for="username" class="form-label">שם משתמש:</label>
@@ -50,15 +63,40 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card">
+            <div class="col-md-6 mt-2">
+                <div class="card justify-content-center">
                     <div class="card-header text-center">
-                        <h4 class="card-title">דוגמאות התחברות לבודק</h4>
+                        <h4 class="card-title">דוגמאות התחברות עבור הבודק</h4>
                     </div>
-                    <div class="card-body">
-                        <p class="card-text text-center">כניסה כמנהל: admin / password</p>
-                        <p class="card-text text-center">כניסה כמשתמש: user / password</p>
-                        <p class="card-text text-center">כניסה כמשתמש ולמנהל: user-admin / password</p>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>הרשאה</th>
+                                    <th>שם משתמש</th>
+                                    <th>סיסמה</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>Admin</td>
+                                    <td>Solange</td>
+                                    <td>SolangeAdmin</td>
+                                </tr>
+                                <tr>
+                                    <td>User</td>
+                                    <td>Miriam</td>
+                                    <td>MiriamUser</td>
+                                </tr>
+                                <tr>
+                                    <td>User</td>
+                                    <td>Shlomo</td>
+                                    <td>ShlomoUser</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
