@@ -14,8 +14,4 @@ public interface DegreeRequirementsRepo extends JpaRepository<DegreeRequirement,
     @Query("select d.requirementName from DegreeRequirement d")
     List<String> findAllRequirementNames();
 
-
-//    @Query("SELECT SUM(d.mandatoryCredits) FROM DegreeRequirements d WHERE d.requirementName LIKE '%מדמ\"ח%'")
-//    Integer sumTotalMandatoryCreditsInComputerScience();
-
 }

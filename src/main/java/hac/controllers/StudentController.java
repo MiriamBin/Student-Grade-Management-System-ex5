@@ -12,8 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
+
+
+
 
 @Controller
 @RequestMapping("/user")
@@ -30,36 +35,49 @@ public class StudentController {
 
     @GetMapping("")
     public String userHomePage(Model model, Principal principal) {
-        List<UserCourses> userCourses = userCoursesRepo.findByUsername(principal.getName());
-        Double sum = 0.0;
-        Integer count = 0;
-        Integer countCompletedCredits = 0;
-        Integer countInProgressCredits = 0;
-        Integer countRemainingCredits = 0;
-        Integer countTotalCredits = 0;
 
-        for (UserCourses uc : userCourses) {
-            if (uc.getGrade() != null) {
-                sum += (uc.getGrade() * uc.getCourse().getCredit());
-                count++;
-                countCompletedCredits += uc.getCourse().getCredit();
+        Map<String, List<String>> studentStatus = new LinkedHashMap<>();
+        List<UserCourses> userCourses = userCoursesRepo.findByUsername(principal.getName());
+        List<String> studentCoursesStatus = calculateStudentCoursesStatus(userCourses);
+        studentStatus.put("תואר", studentCoursesStatus);
+
+        String username = principal.getName();
+        List<DegreeRequirement> requirementTypes = degreeRequirementsRepo.findAll();
+        for (DegreeRequirement requirement : requirementTypes) {
+            String requirementName = requirement.getRequirementName();
+            List<UserCourses> requirementTypeCourses = userCoursesRepo.findByUsernameAndRequirementType(username, requirementName);
+            List<String> requirementTypeStatus = calculateStudentCoursesStatus(requirementTypeCourses);
+            studentStatus.put(requirementName, requirementTypeStatus);
+        }
+        model.addAttribute("studentStatus", studentStatus);
+        return "user/home-page";
+    }
+
+    private List<String> calculateStudentCoursesStatus(List<UserCourses> courses) {
+        double totalGradePoints = 0.0;
+        int completedCredits = 0;
+        int inProgressCredits = 0;
+        //int remainingCredits = 0;
+        int totalCredits = 0;
+
+        for (UserCourses course : courses) {
+            if (course.getGrade() != null) {
+                totalGradePoints += (course.getGrade() * course.getCourse().getCredit());
+                completedCredits += course.getCourse().getCredit();
             } else {
-                countInProgressCredits += uc.getCourse().getCredit();
+                inProgressCredits += course.getCourse().getCredit();
             }
-            countTotalCredits += uc.getCourse().getCredit();
+            totalCredits += course.getCourse().getCredit();
         }
 
-        Double gpa = sum / countCompletedCredits;
-        gpa = Double.isNaN(gpa) ? 0.0 : gpa;
-        model.addAttribute("gpa", String.format("%.2f", gpa));
-
-
-//        Double gpa = userCoursesRepo.calculateGPAForUser(principal.getName());
-//        model.addAttribute("gpa", gpa);
-////        Integer count = userCoursesRepo.countCoursesWithGradeForUser(principal.getName()).intValue();
-////        model.addAttribute("count", count);
-
-        return "user/home-page";
+        //remainingCredits += totalCredits - completedCredits - inProgressCredits;
+        List<String> StudentCoursesStatus = new ArrayList<>();
+        StudentCoursesStatus.add(String.valueOf(completedCredits));
+        StudentCoursesStatus.add(String.valueOf(inProgressCredits));
+       //StudentCoursesStatus.add(String.valueOf(remainingCredits));
+        StudentCoursesStatus.add(String.valueOf(totalCredits));
+        StudentCoursesStatus.add(String.format("%.2f", totalGradePoints / (completedCredits == 0 ? 1 : completedCredits)));
+        return StudentCoursesStatus;
     }
 
     @GetMapping("/userCatalog")
@@ -120,8 +138,6 @@ public class StudentController {
 
     @PostMapping("/updateCourse")
     public String updateCourse(@RequestParam("id") long id, @Valid UserCourses userCourses, BindingResult result) {
-        System.out.println("~~~~~~~~~~~~~~~~~ updateCourse() ~~~~~~~~~~~~~~~~~");
-
         if (result.hasErrors()) {
             return "user/edit-user-course";
         }
