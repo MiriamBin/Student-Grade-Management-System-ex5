@@ -43,7 +43,7 @@
     </div>
   </section>
 
-  <section>
+  <section th:if="${degreeRequirements}">
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card justify-content-center">
@@ -59,24 +59,25 @@
                   <th>נקודות זכות</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody th:if="${degreeRequirements.isEmpty()}">
                 <tr>
-                  <th>קורסי חובה במדעי המחשב</th>
-                  <td>105</td>
+                  <td colspan="2" class="text-center">
+                    <div class="alert alert-primary mb-0">
+                      רשימת דרישות ריקה.
+                      <br>
+                      חזור במועד מאוחר יותר או פנה לרכז החוג
+                    </div>
+                  </td>
                 </tr>
-                <tr>
-                  <th>קורסי בחירה במדעי המחשב</th>
-                  <td>25</td>
-                </tr>
-                <tr>
-                  <th>קורסי בחירה כללים</th>
-                  <td>10</td>
-                </tr>
+                <tbody th:unless="${degreeRequirements.isEmpty()}">
+                <tr th:each="degreeRequirement:${degreeRequirements}">
+                  <td th:text="${degreeRequirement.requirementName}"></td>
+                  <td th:text="${degreeRequirement.getMandatoryCredits}"></td>
                 </tbody>
                 <tfoot class="table-secondary">
-                <tr>
-                  <th>סה"כ</th>
-                  <th>140</th>
+                <tr th:if="${totalDegreeRequirement}">
+                  <th th:text="${totalDegreeRequirement.requirementName}"></th>
+                  <th th:text="${totalDegreeRequirement.mandatoryCredits}"></th>
                 </tr>
                 </tfoot>
               </table>
@@ -134,7 +135,7 @@
       </div>
     </div>
     <span class="alert alert-warning" th:text="${message}" th:if="${message}"></span>
-    </section>
+  </section>
 </main>
 
 <footer class="bg-light py-3">

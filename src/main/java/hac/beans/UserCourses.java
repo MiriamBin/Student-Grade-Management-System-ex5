@@ -11,6 +11,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
+@ToString
+@NoArgsConstructor
+//@AllArgsConstructor
 public class UserCourses implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -27,8 +30,6 @@ public class UserCourses implements Serializable {
     @Min(message = "יש להזין ציון בין 0 ל-100", value = 0)
     @Max(message = "יש להזין ציון בין 0 ל-100", value = 100)
     private Integer grade;
-
-    public UserCourses() {}
 
     public UserCourses(Course course, String username, Integer grade) {
         this.course = course;

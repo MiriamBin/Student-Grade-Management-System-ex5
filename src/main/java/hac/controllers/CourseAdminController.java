@@ -25,10 +25,6 @@ public class CourseAdminController {
 
     @GetMapping("")
     public String adminIndex() {
-        // TODO: for debugging only - remove this
-        degreeRequirementsRepo.save(new DegreeRequirement( "קורס חובה מדמ\"ח", 105));
-        degreeRequirementsRepo.save(new DegreeRequirement( "קורס בחירה מדמ\"ח", 5));
-        degreeRequirementsRepo.save(new DegreeRequirement( "קורס בחירה כללי", 45));
         return "redirect:/admin/manageCourses";
     }
 

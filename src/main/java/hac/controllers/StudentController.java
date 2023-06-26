@@ -1,9 +1,6 @@
 package hac.controllers;
 
-import hac.beans.Course;
-import hac.beans.CourseRepo;
-import hac.beans.UserCourses;
-import hac.beans.UserCoursesRepo;
+import hac.beans.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +24,9 @@ public class StudentController {
 
     @Autowired
     private UserCoursesRepo userCoursesRepo;
+
+    @Autowired
+    private DegreeRequirementsRepo degreeRequirementsRepo;
 
     @GetMapping("")
     public String userHomePage(Model model, Principal principal) {
@@ -66,7 +66,15 @@ public class StudentController {
     public String userCatalog(Model model, Principal principal) {
         model.addAttribute("courses", courseRepo.findAll());
         model.addAttribute("userCourses", userCoursesRepo.findByUsername(principal.getName()));
+        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
+        model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
         return "user/course-catalog";
+    }
+
+    private DegreeRequirement getTotalDegreeRequirement(){
+        String requirementName = "סך הכל";
+        Integer totalCredits = degreeRequirementsRepo.sumTotalMandatoryCredits();
+        return new DegreeRequirement(requirementName, totalCredits == null ? 0 : totalCredits);
     }
 
     @PostMapping("/addToStudentList")
@@ -86,6 +94,8 @@ public class StudentController {
             model.addAttribute("message", "Course already exists for this user.");
         }
         model.addAttribute("courses", courseRepo.findAll());
+        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
+        model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
         model.addAttribute("userCourses", userCoursesRepo.findByUsername(principal.getName()));
         return "user/course-catalog";
     }
