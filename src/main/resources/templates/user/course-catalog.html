@@ -5,6 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>קטלוג קורסים</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      text-align: right;
+    }
+    .card-header {
+      text-align: center;
+
+    }
+    .table {
+      margin: 0;
+    }
+    .table th, .table td {
+      text-align: center;
+    }
+    .btn-table {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.5rem;
+    }
+  </style>
 </head>
 
 <body>
@@ -19,25 +38,24 @@
   <section>
     <div class="row">
       <div class="col-12">
-        <h2 class="text-center mb-4">קטלוג קורסים</h2>
+        <h2 class="text-center mb-4">קטלוג הקורסים במדעי המחשב</h2>
       </div>
     </div>
   </section>
 
   <section>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card mb-3">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card justify-content-center">
           <div class="card-header bg-primary text-center text-white">
             <h4 class="card-title">מידע לסטודנט</h4>
           </div>
-          <div class="card-body">
-
+          <div class="card-body p-0">
             <div class="table-responsive">
               <table class="table">
-                <thead>
+                <thead class="table-light">
                 <tr>
-                  <th>&nbsp;</th>
+                  <th>סוג הקורס</th>
                   <th>נקודות זכות</th>
                 </tr>
                 </thead>
@@ -55,7 +73,7 @@
                   <td>10</td>
                 </tr>
                 </tbody>
-                <tfoot>
+                <tfoot class="table-secondary">
                 <tr>
                   <th>סה"כ</th>
                   <th>140</th>
@@ -69,23 +87,14 @@
     </div>
   </section>
 
-
-  <section>
-    <div class="row">
-      <div class="col-12">
-        <h2 class="text-center mb-4">קטלוג קורסים לסטודנט</h2>
-      </div>
-    </div>
-  </section>
-
   <section class="py-3">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card mb-3">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card justify-content-center">
           <div class="card-header bg-primary text-center text-white">
             <h4 class="card-title">קטלוג קורסים</h4>
           </div>
-          <div class="card-body">
+          <div class="card-body p-0">
             <div class="table-responsive">
               <table class="table">
                 <thead>
@@ -96,17 +105,24 @@
                   <th>פעולות</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="course : ${courses}">
+                <tbody th:if="${courses}">
+                <tr th:if="${courses.isEmpty()}">
+                  <td colspan="4" class="text-center">
+                    <div class="alert alert-primary mb-0">
+                      רשימת הקורסים ריקה.
+                      <br>
+                      חזור במועד מאוחר יותר או פנה לרכז החוג
+                    </div>
+                  </td>
+                </tr>
+                <tr th:each="course:${courses}" th:unless="${courses.isEmpty()}">
                   <td th:text="${course.courseName}"></td>
-                  <!--<td th:text="${course.courseType}"></td>-->
-                  <td>להוסיף סוג</td>
+                  <td th:text="${course.requirementType}"></td>
                   <td th:text="${course.credit}"></td>
-
                   <td>
                     <form action="#" method="post" th:action="@{/user/addToStudentList}" th:object="${course}">
                       <input name="id" th:value="${course.id}" type="hidden">
-                      <button class="btn btn-primary" type="submit">הוסף לקורסים שלי</button>
+                      <button class="btn btn-primary btn-table" type="submit">הוסף לקורסים שלי</button>
                     </form>
                   </td>
                 </tr>
@@ -118,55 +134,13 @@
       </div>
     </div>
     <span class="alert alert-warning" th:text="${message}" th:if="${message}"></span>
-  </section>
-
-
-  <section class="py-3">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card mb-3">
-          <div class="card-header bg-primary text-center text-white">
-            <h4 class="card-title">קורסים שלי</h4>
-          </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table">
-                <thead>
-                <tr>
-                  <th>שם הקורס</th>
-                  <th>סוג הקורס</th>
-                  <th>נקודות זכות</th>
-                  <th>פעולות</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                <tr th:each="userCourses : ${userCourses}">
-                  <td th:text="${userCourses.course.courseName}"></td>
-                  <!--<td th:text="${course.courseType}"></td>-->
-                  <td>להוסיף סוג</td>
-                  <td th:text="${userCourses.course.credit}"></td>
-                  <td th:text="${userCourses.username}"></td>
-                  <td>
-                    <!--                    <form action="#" method="post" th:action="@{/addToStudentList}" th:object="${course}">-->
-                    <!--                      <input name="id" th:value="${course.id}" type="hidden">-->
-                    <!--                      <button class="btn btn-primary" type="submit">הוסף לקורסים שלי</button>-->
-                    <!--                    </form>-->
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
+    </section>
 </main>
 
 <footer class="bg-light py-3">
+  <div class="container">
+    <p>&copy; 2023 מכללת הדסה. כל הזכויות שמורות למרים בינימינס וסלומון דמה.</p>
+  </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
