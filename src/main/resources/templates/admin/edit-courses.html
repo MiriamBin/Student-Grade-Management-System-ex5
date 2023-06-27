@@ -8,14 +8,19 @@
 </head>
 
 <body>
+<header class="bg-primary py-3">
+    <div class="container">
+        <h1 class="text-white">ניהול קורסים לסטודנטים</h1>
+    </div>
+</header>
+
 <div class="container my-5">
     <h2 class="mb-5">ערוך קורס</h2>
     <div class="row">
         <div class="col-md-6">
             <form action="#" th:action="@{/admin/update}" th:object="${course}" method="post">
-                <!-- Add a hidden field for the course id -->
                 <input type="hidden" th:field="*{id}"/>
-                <!-- rest of the form fields -->
+
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="courseName" class="col-form-label">שם הקורס</label>
@@ -39,10 +44,14 @@
                     <div class="col-md-6 mt-5">
                         <input type="submit" class="btn btn-primary" value="שמור שינויים">
                     </div>
+                    <div class="col-md-6 mt-5">
+                        <a class="btn btn-secondary" th:href="@{/admin/manageCourses}">חזור</a>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<div th:insert="fragments/footer.html :: footer"></div>
 </body>
 </html>

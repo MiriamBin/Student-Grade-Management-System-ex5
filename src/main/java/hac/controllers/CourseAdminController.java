@@ -37,10 +37,6 @@ public class CourseAdminController {
     }
     @PostMapping("/delete")
     public String deleteCourse(@RequestParam("id") long id, Model model) {
-
-        System.out.println("deleteCourse: " + id); //TODO: remove this line
-        // we throw an exception if the user is not found
-        // since we don't catch the exception here, it will fall back on an error page (see below)
         Course course = courseRepo
                 .findById(id)
                 .orElseThrow(
@@ -62,36 +58,16 @@ public class CourseAdminController {
         return "redirect:/admin/manageCourses";
     }
 
-//    @PostMapping("/delete")
-//    public String deleteUser(@RequestParam("id") long id, Model model) {
-//
-//        System.out.println("deleteUser: " + id); //TODO: remove this line
-//        // we throw an exception if the user is not found
-//        // since we don't catch the exception here, it will fall back on an error page (see below)
-//        Course user = courseRepo
-//                .findById(id)
-//                .orElseThrow(
-//                        () -> new IllegalArgumentException("Invalid user Id:" + id)
-//                );
-//        courseRepo.delete(user);
-//        model.addAttribute("users", courseRepo.findAll());
-//        return "redirect:/admin/manageCourses";
-//    }
-
     @GetMapping("/editCourse/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
-        System.out.println("showUpdateForm: " + id); //TODO: remove this line
         Course course = courseRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
-        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
-
-        // the name "course"  is bound to the VIEW
         model.addAttribute("course", course);
+        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
         return "admin/edit-courses";
     }
 
     @PostMapping("/update")
     public String updateCourse(@RequestParam("id") long id, @Valid Course course, BindingResult result, Model model) {
-        System.out.println("updateUser: " + course);
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
         if (result.hasErrors()) {
             course.setId(id);
@@ -136,19 +112,16 @@ public class CourseAdminController {
         return "redirect:/admin/requirements";
     }
 
-@GetMapping("/newDegreeRequirement")
-public String newDegreeRequirement(Model model) {
-    model.addAttribute("degreeRequirement", new DegreeRequirement());
-    model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
-    model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
-    return "admin/requirements-page";
-}
+    @GetMapping("/newDegreeRequirement")
+    public String newDegreeRequirement(Model model) {
+        model.addAttribute("degreeRequirement", new DegreeRequirement());
+        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
+        model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+        return "admin/requirements-page";
+    }
 
     @PostMapping("/addDegreeRequirement")
     public String addDegreeRequirement(@Valid DegreeRequirement degreeRequirement, BindingResult result, Model model) {
-
-
-        System.out.println("addDegreeRequirement: " + degreeRequirement);
         if (result.hasErrors()) {
             model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
             model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
@@ -171,7 +144,6 @@ public String newDegreeRequirement(Model model) {
             model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
         }
 
-        // pass the list of users to the view
         model.addAttribute("degreeRequirement", new DegreeRequirement());
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
         model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
@@ -194,7 +166,6 @@ public String newDegreeRequirement(Model model) {
             return "admin/manage-courses";
         }
         courseRepo.save(course);
-        // pass the list of users to the view
         model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
@@ -206,64 +177,4 @@ public String newDegreeRequirement(Model model) {
         Integer totalCredits = degreeRequirementsRepo.sumTotalMandatoryCredits();
         return new DegreeRequirement(requirementName, totalCredits == null ? 0 : totalCredits);
     }
-
-    private boolean isDegreeRequirementExists(String requirementName){
-        return degreeRequirementsRepo.existsByRequirementName(requirementName);
-    }
-
-//    @GetMapping("/delete/{id}")
-//    public String deleteUserGet(@PathVariable long id) {
-//
-//        System.out.println("deleteUser: 222222");
-//        return "redirect:/";
-//    }
-//
-//    @GetMapping("/delete")
-//    public String deleteUserGetNoParams() {
-//        System.out.println("deleteUser: 333333");
-//
-//        return "redirect:/";
-//    }
-
-//
-//    @GetMapping("/add-course")
-//    public String showAddCoursePage(Model model) {
-//        model.addAttribute("course", new Course());
-//        return "add-course";
-//    }
-
-//    @GetMapping("/editCourse/{id}")
-//    public String showUpdateForm(@PathVariable("id") long id, Model model) {
-//        Course course = courseRepo.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
-//        model.addAttribute("course", course);
-//        return "edit-coureses";
-//    }
-
-//    @PostMapping("/updateCourse/{id}")
-//    public String updateCourse(@PathVariable("id") long id, @Valid Course course,
-//                               BindingResult result, Model model) {
-//        if (result.hasErrors()) {
-//            course.setId(id);
-//            return "edit-coureses";
-//        }
-//
-//        courseRepo.save(course);
-//        model.addAttribute("courses", courseRepo.findAll());
-//        return "edit-coureses";
-//    }
-
-//    @GetMapping("/delete/{id}")
-//    public String deleteUserGet(@PathVariable long id) {
-//
-//        System.out.println("deleteUser: 222222");
-//        return "redirect:add-course";
-//    }
-
-//    @GetMapping("/delete")
-//    public String deleteUserGetNoParams() {
-//        System.out.println("deleteUser: 333333");
-//
-//        return "redirect:add-course";
-//    }
 }

@@ -1,48 +1,50 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<html dir="rtl" lang="he">
+<html dir="rtl" lang="he" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>ניהול קטלוג קורסים</title>
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" rel="stylesheet">
-    <link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
-          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 
 <body>
 <header class="bg-primary py-3">
     <div class="container">
         <h1 class="text-white">ניהול קורסים לסטודנטים</h1>
-        <div th:insert="navbar.html :: nav"></div>
     </div>
 </header>
 <div class="container my-5">
     <div class="row">
-        <div class="col-md-6">
-            <form action="#" th:action="@{/admin/updateDegreeRequirement}" th:object="${degreeRequirement}" method="post">
-                <input type="hidden" th:field="*{id}"/>
-                <div class="form-group">
-                    <label for="electiveCredits" class="col-form-label">סוג דרישה</label>
-                    <input type="text" th:field="*{requirementName}" class="form-control" id="electiveCredits" placeholder="נקודות זכות בחרים">
-                    <span th:if="${#fields.hasErrors('RequirementName')}" th:errors="*{requirementName}" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label for="mandatoryCredits" class="col-form-label">כמות נקודות זכות</label>
-                    <input type="number" th:field="*{mandatoryCredits}" class="form-control" id="mandatoryCredits" placeholder="נקודות זכות חובה">
-                    <span th:if="${#fields.hasErrors('mandatoryCredits')}" th:errors="*{mandatoryCredits}" class="text-danger"></span>
-                </div>
-                <div class="mt-5">
-                    <input type="submit" class="btn btn-primary" value="שמור שינויים">
-                </div>
-                <div class="mt-5">
-                    <a class="btn btn-secondary" th:href="@{/admin/requirements}">חזור</a>
-                </div>
-            </form>
+        <div class="col-12 mb-3">
+            <h2 class="text-center">ערוך דרישת קורסים</h2>
         </div>
+        <div>
+            <div class="row">
+                <div class="col-md-6">
+                    <form action="#" th:action="@{/admin/updateDegreeRequirement}" th:object="${degreeRequirement}" method="post">
+                        <input type="hidden" th:field="*{id}"/>
+                        <div class="form-group">
+                            <label for="electiveCredits" class="col-form-label">סוג דרישה</label>
+                            <input type="text" th:field="*{requirementName}" class="form-control" id="electiveCredits" placeholder="הזן שם דרישה">
+                            <span th:if="${#fields.hasErrors('requirementName')}" th:errors="*{requirementName}" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="mandatoryCredits" class="col-form-label">כמות נקודות זכות</label>
+                            <input type="number" th:field="*{mandatoryCredits}" class="form-control" id="mandatoryCredits" placeholder="הזן נקודות זכות">
+                            <span th:if="${#fields.hasErrors('mandatoryCredits')}" th:errors="*{mandatoryCredits}" class="text-danger"></span>
+                        </div>
+                        <div class="mt-5">
+                            <input type="submit" class="btn btn-primary" value="שמור שינויים">
+                        </div>
+                        <div class="mt-5">
+                            <a class="btn btn-secondary" th:href="@{/admin/requirements}">חזור</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div th:insert="fragments/footer.html :: footer"></div>
     </div>
 </div>
-
 </body>
 </html>

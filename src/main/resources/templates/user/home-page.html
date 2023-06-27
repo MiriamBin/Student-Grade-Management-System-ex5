@@ -9,21 +9,14 @@
         body {
             text-align: right;
         }
-
         .card-header {
             text-align: center;
         }
         .table {
             margin: 0;
         }
-
         .table td {
             text-align: center;
-        }
-
-        .btn-delete, .btn-edit {
-            font-size: 0.8rem;
-            padding: 0.2rem 0.5rem;
         }
     </style>
 </head>
@@ -32,7 +25,7 @@
 <header class="bg-primary py-3">
     <div class="container">
         <h1 class="text-white">ניהול קורסים לסטודנטים</h1>
-        <div th:insert="navbar.html :: nav"></div>
+        <div th:insert="fragments/navbar.html :: nav"></div>
     </div>
 </header>
 
@@ -60,11 +53,6 @@
                                     <th>סך הכל נקודות זכות</th>
                                     <td th:text="${status.value[2]}"></td>
                                 </tr>
-
-<!--                                <tr>-->
-<!--                                    <th>gfsdf</th>-->
-<!--                                    <td th:text="${status.value[3]}"></td>-->
-<!--                                </tr>-->
                                 </tbody>
                                 <tfoot class="table-secondary">
                                 <tr>
@@ -81,5 +69,6 @@
         </div>
     </section>
 </main>
+<div th:insert="fragments/footer.html :: footer"></div>
 </body>
 </html>

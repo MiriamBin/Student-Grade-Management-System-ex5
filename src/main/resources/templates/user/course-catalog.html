@@ -30,7 +30,7 @@
 <header class="bg-primary py-3">
   <div class="container">
     <h1 class="text-white">ניהול קורסים לסטודנטים</h1>
-    <div th:insert="navbar.html :: nav"></div>
+    <div th:insert="fragments/navbar.html :: nav"></div>
   </div>
 </header>
 
@@ -138,10 +138,6 @@
   </section>
 </main>
 
-<footer class="bg-light py-3">
-  <div class="container">
-    <p>&copy; 2023 מכללת הדסה. כל הזכויות שמורות למרים בינימינס וסלומון דמה.</p>
-  </div>
-</footer>
+<div th:insert="fragments/footer.html :: footer"></div>
 </body>
 </html>

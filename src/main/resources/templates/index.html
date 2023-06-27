@@ -60,22 +60,17 @@
                 </div>
                 <div class="card-body">
                     <p>
-                        לצורכי בדיקה
-                        <br>
+                        לצורכי בדיקה<br>
                         <b>למחוק לפני ההגשה</b>
                     </p>
                 </div>
                 <div class="card-footer d-grid">
-                    <a th:href="@{/simulateError}" class="btn btn-warning text-white">עמוד חריגה</a>
+                    <a th:href="@{/login}" class="btn btn-warning text-white">עמוד חריגה</a>
                 </div>
             </div>
         </div>
     </div>
 </main>
-<footer class="bg-light py-3">
-    <div class="container">
-        <p class="text-center">&copy; 2023 מכללת הדסה. כל הזכויות שמורות למרים בינימינס וסלומון דמה.</p>
-    </div>
-</footer>
+<div th:insert="fragments/footer.html :: footer"></div>
 </body>
 </html>
