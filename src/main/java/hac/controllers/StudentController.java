@@ -82,8 +82,13 @@ public class StudentController {
 
     @GetMapping("/userCatalog")
     public String userCatalog(Model model, Principal principal) {
+        List<Long> userCoursesIds = new ArrayList<>();
+        for (UserCourses userCourse : userCoursesRepo.findByUsername(principal.getName())) {
+            userCoursesIds.add(userCourse.getCourse().getId());
+        }
+
         model.addAttribute("courses", courseRepo.findAll());
-        model.addAttribute("userCourses", userCoursesRepo.findByUsername(principal.getName()));
+        model.addAttribute("userCoursesIds", userCoursesIds);
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
         model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
         return "user/course-catalog";
@@ -111,10 +116,14 @@ public class StudentController {
         } else {
             model.addAttribute("message", "Course already exists for this user.");
         }
+        List<Long> userCoursesIds = new ArrayList<>();
+        for (UserCourses userCourse : userCoursesRepo.findByUsername(principal.getName())) {
+            userCoursesIds.add(userCourse.getCourse().getId());
+        }
         model.addAttribute("courses", courseRepo.findAll());
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
         model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
-        model.addAttribute("userCourses", userCoursesRepo.findByUsername(principal.getName()));
+        model.addAttribute("userCoursesIds", userCoursesIds);
         return "user/course-catalog";
     }
 
@@ -126,6 +135,15 @@ public class StudentController {
         userCoursesRepo.delete(userCourse);
         model.addAttribute("message", "Course deleted successfully.");
         return "redirect:/user/myCourses";
+    }
+
+    @PostMapping("/deleteCourseFromCatalog")
+    public String deleteCourseFromCatalog(@RequestParam("id") long id, Model model) {
+        UserCourses userCourse = userCoursesRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
+        userCoursesRepo.delete(userCourse);
+        model.addAttribute("message", "Course deleted successfully.");
+        return "redirect:/user/userCatalog";
     }
 
     @PostMapping("/editCourse")

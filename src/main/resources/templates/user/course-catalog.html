@@ -120,7 +120,14 @@
                   <td th:text="${course.courseName}"></td>
                   <td th:text="${course.requirementType}"></td>
                   <td th:text="${course.credit}"></td>
-                  <td>
+                  <td th:if="${userCoursesIds.contains(course.id)}">
+                    <span class="text-center">ברשימה שלך</span>
+<!--                    <form action="#" method="post" th:action="@{/user/deleteCourseFromCatalog}" th:object="${course}">-->
+<!--                      <input name="id" th:value="${course.id}" type="hidden">-->
+<!--                      <button class="btn btn-danger btn-table" type="submit">הסר מהקורסים שלי</button>-->
+<!--                    </form>-->
+                  </td>
+                  <td th:unless="${userCoursesIds.contains(course.id)}">
                     <form action="#" method="post" th:action="@{/user/addToStudentList}" th:object="${course}">
                       <input name="id" th:value="${course.id}" type="hidden">
                       <button class="btn btn-primary btn-table" type="submit">הוסף לקורסים שלי</button>

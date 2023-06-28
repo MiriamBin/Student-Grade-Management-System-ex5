@@ -4,9 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,13 +25,15 @@ public class Course implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotNull
-    @NotEmpty(message = "יש להוסיף שם")
+    @NotEmpty(message = "יש להזין שם קורס")
+    @NotBlank(message = "יש להזין אותיות")
     private String courseName;
 
-    @Positive(message = "Course credit must be positive")
-    private int credit;
+    @NotNull(message = "שדה חובה")
+    @Min(message = "יש להזין ערך גדול מ-0", value = 1)
+    private Integer credit;
 
-    @NotEmpty(message = "יש להוסיף שם")
+    @NotEmpty(message = "יש להזין סוג קורס")
+    @NotBlank(message = "יש להזין אותיות")
     private String requirementType;
 }
