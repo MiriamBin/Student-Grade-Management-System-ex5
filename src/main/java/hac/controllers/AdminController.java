@@ -10,9 +10,10 @@ import org.springframework.ui.Model;
 
 import java.util.List;
 
+
 @Controller
 @RequestMapping("/admin")
-public class CourseAdminController {
+public class AdminController {
 
     @Autowired
     private CourseRepo courseRepo;
@@ -42,14 +43,18 @@ public class CourseAdminController {
             model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
             return "admin/manage-courses";
         }
-        if(courseRepo.existsByCourseName(course.getCourseName())){
-            model.addAttribute("message", "Course already exists.");
+        String courseName = course.getCourseName();
+        if(courseRepo.existsByCourseName(courseName)){
+            String existMessage = String.format("שם הקורס \"%s\" כבר קיים. הזן שם אחר.", courseName);
+            model.addAttribute("existMessage", existMessage);
             model.addAttribute("course", new Course());
             model.addAttribute("courses", courseRepo.findAll());
             model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
             return "admin/manage-courses";
         }
         courseRepo.save(course);
+        String addedMessage = String.format("הקורס \"%s\" נוסף בהצלחה.", courseName);
+        model.addAttribute("addedMessage", addedMessage);
         model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
@@ -76,7 +81,7 @@ public class CourseAdminController {
             courseRepo.delete(course);
         }
         } catch (org.springframework.dao.DataAccessException | org.hibernate.exception.JDBCConnectionException e) {
-            model.addAttribute("error", "There was a problem with the database. Please try again later.");
+            model.addAttribute("error", "הייתה בעיה במסד הנתונים. נסה שנית מאוחר יותר.");
             return "error";
         }
 
@@ -104,7 +109,7 @@ public class CourseAdminController {
         String courseName = course.getCourseName();
         Course courseFromDB = courseRepo.findByCourseName(courseName);
         if(courseFromDB != null && courseFromDB.getId() != id){
-            String existMessage = String.format("שם הקורס \"%s\" כבר קיים. הזן שם אחר.", course.getCourseName());
+            String existMessage = String.format("שם הקורס \"%s\" כבר קיים. הזן שם אחר.", courseName);
             model.addAttribute("message", existMessage);
             return "admin/edit-courses";
         }
@@ -137,7 +142,7 @@ public class CourseAdminController {
             degreeRequirementsRepo.delete(requirement);
             return "redirect:/admin/requirements";
         } catch (Exception e) {
-            model.addAttribute("error", "There was a problem with the database. Please try again later.");
+            model.addAttribute("error", "הייתה בעיה במסד הנתונים. נסה שנית מאוחר יותר.");
             return "error";
         }
     }
@@ -151,11 +156,23 @@ public class CourseAdminController {
     }
 
     @PostMapping("/updateDegreeRequirement")
-    public synchronized String updateDegreeRequirement(@RequestParam("id") long id, @Valid DegreeRequirement requirement, BindingResult result) {
+    public synchronized String updateDegreeRequirement(@RequestParam("id") long id,
+                                                       @Valid DegreeRequirement requirement,
+                                                       BindingResult result, Model model) {
+
         if (result.hasErrors()) {
             requirement.setId(id);
             return "admin/edit-requirements";
         }
+
+        String requirementName = requirement.getRequirementName();
+        DegreeRequirement requirementFromDB = degreeRequirementsRepo.findByRequirementName(requirementName);
+        if(requirementFromDB != null && requirementFromDB.getId() != id) {
+            String existMessage = String.format("שם הדרישה \"%s\" כבר קיים. הזן שם אחר.", requirementName);
+            model.addAttribute("message", existMessage);
+            return "admin/edit-requirements";
+        }
+
         degreeRequirementsRepo.save(requirement);
         return "redirect:/admin/requirements";
     }

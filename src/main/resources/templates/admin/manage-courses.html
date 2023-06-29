@@ -94,9 +94,17 @@
         </div>
     </div>
 
-    <section>
-        <div class="alert alert-danger" th:if="${message}" th:text="${message}"></div>
-    </section>
+    <div th:if="${addedMessage}" class="row justify-content-center">
+        <div class="alert alert-success col-md-8 m-3 text-center">
+            <span th:text="${addedMessage}"></span>
+        </div>
+    </div>
+
+    <div th:if="${existMessage}" class="row justify-content-center">
+        <div class="alert alert-danger col-md-8 m-3 text-center">
+            <span th:text="${existMessage}"></span>
+        </div>
+    </div>
 
     <section class="py-3">
         <div class="row">

@@ -57,7 +57,6 @@ public class StudentController {
         double totalGradePoints = 0.0;
         int completedCredits = 0;
         int inProgressCredits = 0;
-        //int remainingCredits = 0;
         int totalCredits = 0;
 
         for (UserCourses course : courses) {
@@ -70,11 +69,9 @@ public class StudentController {
             totalCredits += course.getCourse().getCredit();
         }
 
-        //remainingCredits += totalCredits - completedCredits - inProgressCredits;
         List<String> StudentCoursesStatus = new ArrayList<>();
         StudentCoursesStatus.add(String.valueOf(completedCredits));
         StudentCoursesStatus.add(String.valueOf(inProgressCredits));
-       //StudentCoursesStatus.add(String.valueOf(remainingCredits));
         StudentCoursesStatus.add(String.valueOf(totalCredits));
         StudentCoursesStatus.add(String.format("%.2f", totalGradePoints / (completedCredits == 0 ? 1 : completedCredits)));
         return StudentCoursesStatus;
@@ -111,11 +108,9 @@ public class StudentController {
 
         if (existingUserCourses == null) {
             userCoursesRepo.save( new UserCourses(newCourse,principal.getName(),null) );
-            model.addAttribute("message", "Course added successfully.");
-
-        } else {
-            model.addAttribute("message", "Course already exists for this user.");
+            model.addAttribute("message", "הקורס נוסף בהצלחה");
         }
+
         List<Long> userCoursesIds = new ArrayList<>();
         for (UserCourses userCourse : userCoursesRepo.findByUsername(principal.getName())) {
             userCoursesIds.add(userCourse.getCourse().getId());
