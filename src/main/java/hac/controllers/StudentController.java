@@ -101,7 +101,7 @@ public class StudentController {
     }
 
     @PostMapping("/addToStudentList")
-    public String addCourseToStudentList(@RequestParam("id") long id, Model model, Principal principal) {
+    public synchronized String addCourseToStudentList(@RequestParam("id") long id, Model model, Principal principal) {
         Course newCourse = courseRepo
                 .findById(id)
                 .orElseThrow(
@@ -128,7 +128,7 @@ public class StudentController {
     }
 
     @PostMapping("/deleteCourse")
-    public String deleteCourse(@RequestParam("id") long id, Model model) {
+    public synchronized String deleteCourse(@RequestParam("id") long id, Model model) {
         UserCourses userCourse = userCoursesRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
 
@@ -138,7 +138,7 @@ public class StudentController {
     }
 
     @PostMapping("/deleteCourseFromCatalog")
-    public String deleteCourseFromCatalog(@RequestParam("id") long id, Model model) {
+    public synchronized String deleteCourseFromCatalog(@RequestParam("id") long id, Model model) {
         UserCourses userCourse = userCoursesRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
         userCoursesRepo.delete(userCourse);
@@ -155,7 +155,7 @@ public class StudentController {
     }
 
     @PostMapping("/updateCourse")
-    public String updateCourse(@RequestParam("id") long id, @Valid UserCourses userCourses, BindingResult result) {
+    public synchronized String updateCourse(@RequestParam("id") long id, @Valid UserCourses userCourses, BindingResult result) {
         if (result.hasErrors()) {
             return "user/edit-user-course";
         }

@@ -36,7 +36,8 @@ public class CourseAdminController {
         return "admin/manage-courses";
     }
     @PostMapping("/delete")
-    public String deleteCourse(@RequestParam("id") long id, Model model) {
+    public synchronized String deleteCourse(@RequestParam("id") long id, Model model) {
+        try {
         Course course = courseRepo
                 .findById(id)
                 .orElseThrow(
@@ -53,6 +54,10 @@ public class CourseAdminController {
         } else {
             courseRepo.delete(course);
         }
+        } catch (org.springframework.dao.DataAccessException | org.hibernate.exception.JDBCConnectionException e) {
+            model.addAttribute("error", "There was a problem with the database. Please try again later.");
+            return "error";
+        }
 
         model.addAttribute("courses", courseRepo.findAll());
         return "redirect:/admin/manageCourses";
@@ -67,7 +72,7 @@ public class CourseAdminController {
     }
 
     @PostMapping("/update")
-    public String updateCourse(@RequestParam("id") long id, @Valid Course course, BindingResult result, Model model) {
+    public synchronized  String updateCourse(@RequestParam("id") long id, @Valid Course course, BindingResult result, Model model) {
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
         if (result.hasErrors()) {
             course.setId(id);
@@ -87,15 +92,26 @@ public class CourseAdminController {
     }
 
     @PostMapping("/deleteRequirements")
-    public String deleteRequirements(@RequestParam("id") long id, Model model) {
-        DegreeRequirement requirement = degreeRequirementsRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid DegreeRequirements Id:" + id));
-        degreeRequirementsRepo.delete(requirement);
-        return "redirect:/admin/requirements";
+    public synchronized  String deleteRequirements(@RequestParam("id") long id, Model model) {
+
+        try {
+            DegreeRequirement requirement = degreeRequirementsRepo.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid DegreeRequirements Id:" + id));
+            degreeRequirementsRepo.delete(requirement);
+            return "redirect:/admin/requirements";
+        } catch (Exception e) {
+            model.addAttribute("error", "There was a problem with the database. Please try again later.");
+            return "error";
+        }
+//
+//        DegreeRequirement requirement = degreeRequirementsRepo.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("Invalid DegreeRequirements Id:" + id));
+//        degreeRequirementsRepo.delete(requirement);
+//        return "redirect:/admin/requirements";
     }
 
     @GetMapping("/editDegreeRequirement/{id}")
-    public String showDegreeRequirementUpdateForm(@PathVariable("id") long id, Model model) {
+    public synchronized String showDegreeRequirementUpdateForm(@PathVariable("id") long id, Model model) {
         DegreeRequirement degreeRequirement = degreeRequirementsRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid requirement Id:" + id));
         model.addAttribute("degreeRequirement", degreeRequirement);
@@ -103,7 +119,7 @@ public class CourseAdminController {
     }
 
     @PostMapping("/updateDegreeRequirement")
-    public String updateDegreeRequirement(@RequestParam("id") long id, @Valid DegreeRequirement requirement, BindingResult result) {
+    public synchronized String updateDegreeRequirement(@RequestParam("id") long id, @Valid DegreeRequirement requirement, BindingResult result) {
         if (result.hasErrors()) {
             requirement.setId(id);
             return "admin/edit-requirements";
@@ -121,7 +137,7 @@ public class CourseAdminController {
     }
 
     @PostMapping("/addDegreeRequirement")
-    public String addDegreeRequirement(@Valid DegreeRequirement degreeRequirement, BindingResult result, Model model) {
+    public synchronized String addDegreeRequirement(@Valid DegreeRequirement degreeRequirement, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
             model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
@@ -152,7 +168,7 @@ public class CourseAdminController {
     }
 
     @PostMapping("/addCourse")
-    public String addCourse(@Valid Course course, BindingResult result, Model model) {
+    public synchronized String addCourse(@Valid Course course, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("courses", courseRepo.findAll());
             model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
