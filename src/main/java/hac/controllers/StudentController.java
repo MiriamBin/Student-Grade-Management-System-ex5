@@ -17,24 +17,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
+import static hac.utils.Constants.*;
+
 /**
  * Student controller for handling student page
  */
 @Controller
 @RequestMapping("/user")
 public class StudentController {
-
-    final String courseAddedSuccessfully = "הקורס נוסף בהצלחה";
-    final String courseDeletedSuccessfully = "הקורס נמחק בהצלחה";
-    final String coursesModelAttribute = "courses";
-    final String userCoursesModelAttribute = "userCourses";
-    final String degreeRequirementsModelAttribute = "degreeRequirements";
-    final String totalDegreeRequirementModelAttribute = "totalDegreeRequirement";
-    final String userCoursesIdsModelAttribute = "userCoursesIds";
-    final String messageModelAttribute = "message";
-    final String studentStatusModelAttribute = "studentStatus";
-
-    final String invalidId = "מספר ID של הקורס לא חוקי";
 
     @Autowired
     private CourseRepo courseRepo;
@@ -67,7 +57,7 @@ public class StudentController {
             List<String> requirementTypeStatus = calculateStudentCoursesStatus(requirementTypeCourses);
             studentStatus.put(requirementName, requirementTypeStatus);
         }
-        model.addAttribute(studentStatusModelAttribute, studentStatus);
+        model.addAttribute(STUDENT_STATUS_MODEL_ATTRIBUTE, studentStatus);
         return "user/home-page";
     }
 
@@ -114,10 +104,10 @@ public class StudentController {
             userCoursesIds.add(userCourse.getCourse().getId());
         }
 
-        model.addAttribute(coursesModelAttribute, courseRepo.findAll());
-        model.addAttribute(userCoursesIdsModelAttribute, userCoursesIds);
-        model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAll());
-        model.addAttribute(totalDegreeRequirementModelAttribute, getTotalDegreeRequirement());
+        model.addAttribute(COURSE_MODEL_ATTRIBUTE, courseRepo.findAll());
+        model.addAttribute(USER_COURSES_IDS_MODEL_ATTRIBUTE, userCoursesIds);
+        model.addAttribute(DEGREE_REQUIREMENTS_MODEL_ATTRIBUTE, degreeRequirementsRepo.findAll());
+        model.addAttribute(TOTAL_DEGREE_REQUIREMENT_MODEL_ATTRIBUTE, getTotalDegreeRequirement());
         return "user/course-catalog";
     }
 
@@ -139,23 +129,23 @@ public class StudentController {
         Course newCourse = courseRepo
                 .findById(id)
                 .orElseThrow(
-                        () -> new IllegalArgumentException(invalidId + id)
+                        () -> new IllegalArgumentException(INVALID_ID + id)
                 );
         UserCourses existingUserCourses = userCoursesRepo.findByCourseAndUsername(newCourse, principal.getName());
 
         if (existingUserCourses == null) {
             userCoursesRepo.save( new UserCourses(newCourse,principal.getName(),null) );
-            model.addAttribute(messageModelAttribute, courseAddedSuccessfully);
+            model.addAttribute(MESSAGE_MODEL_ATTRIBUTE, COURSE_ADDED_SUCCESSFULLY);
         }
 
         List<Long> userCoursesIds = new ArrayList<>();
         for (UserCourses userCourse : userCoursesRepo.findByUsername(principal.getName())) {
             userCoursesIds.add(userCourse.getCourse().getId());
         }
-        model.addAttribute(coursesModelAttribute, courseRepo.findAll());
-        model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAll());
-        model.addAttribute(totalDegreeRequirementModelAttribute, getTotalDegreeRequirement());
-        model.addAttribute(userCoursesIdsModelAttribute, userCoursesIds);
+        model.addAttribute(COURSE_MODEL_ATTRIBUTE, courseRepo.findAll());
+        model.addAttribute(DEGREE_REQUIREMENTS_MODEL_ATTRIBUTE, degreeRequirementsRepo.findAll());
+        model.addAttribute(TOTAL_DEGREE_REQUIREMENT_MODEL_ATTRIBUTE, getTotalDegreeRequirement());
+        model.addAttribute(USER_COURSES_IDS_MODEL_ATTRIBUTE, userCoursesIds);
         return "user/course-catalog";
     }
 
@@ -171,7 +161,7 @@ public class StudentController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
 
         userCoursesRepo.delete(userCourse);
-        model.addAttribute(messageModelAttribute, courseDeletedSuccessfully);
+        model.addAttribute(MESSAGE_MODEL_ATTRIBUTE, COURSE_DELETED_SUCCESSFULLY);
         return "redirect:/user/myCourses";
     }
 
@@ -184,9 +174,9 @@ public class StudentController {
     @PostMapping("/deleteCourseFromCatalog")
     public synchronized String deleteCourseFromCatalog(@RequestParam("id") long id, Model model) {
         UserCourses userCourse = userCoursesRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(invalidId + id));
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_ID + id));
         userCoursesRepo.delete(userCourse);
-        model.addAttribute(messageModelAttribute, courseDeletedSuccessfully);
+        model.addAttribute(MESSAGE_MODEL_ATTRIBUTE, COURSE_DELETED_SUCCESSFULLY);
         return "redirect:/user/userCatalog";
     }
 
@@ -199,8 +189,8 @@ public class StudentController {
     @PostMapping("/editCourse")
     public String editCourse(@RequestParam("id") long id, Model model) {
         UserCourses userCourses = userCoursesRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(invalidId + id));
-        model.addAttribute(userCoursesModelAttribute,userCourses);
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_ID + id));
+        model.addAttribute(USER_COURSES_MODEL_ATTRIBUTE,userCourses);
         return "user/edit-user-course";
     }
 
@@ -219,7 +209,7 @@ public class StudentController {
 
         // Retrieve the course from the database based on the given id
         UserCourses existingUserCourses = userCoursesRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(invalidId + id));
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_ID + id));
 
         // Update the grade value
         existingUserCourses.setGrade(userCourses.getGrade());
@@ -239,9 +229,9 @@ public class StudentController {
      */
     @GetMapping("/myCourses")
     public String myCourses(Model model, Principal principal) {
-        model.addAttribute(coursesModelAttribute, courseRepo.findAll());
-        model.addAttribute(userCoursesModelAttribute, userCoursesRepo.findAll());
-        model.addAttribute(userCoursesModelAttribute, userCoursesRepo.findByUsername(principal.getName()));
+        model.addAttribute(COURSE_MODEL_ATTRIBUTE, courseRepo.findAll());
+        model.addAttribute(USER_COURSES_MODEL_ATTRIBUTE, userCoursesRepo.findAll());
+        model.addAttribute(USER_COURSES_MODEL_ATTRIBUTE, userCoursesRepo.findByUsername(principal.getName()));
         return "/user/my-courses";
     }
 }
