@@ -19,6 +19,16 @@ public class AdminController {
     final String errorMessages = "קרתה תקלה, אנא נסה שנית מאוחר יותר";
     final String courseInUse = "לא ניתן למחוק קורס שהוקצה לסטודנטים";
     final String invalidId = "מספר ID של הקורס לא חוקי";
+    final String coursesModelAttribute = "courses";
+    final String courseModelAttribute = "course";
+    final String degreeRequirementsModelAttribute = "degreeRequirements";
+    final String degreeRequirementModelAttribute = "degreeRequirement";
+    final String existMessageModelAttribute = "existMessage";
+    final String addedMessageModelAttribute = "addedMessage";
+    final String totalDegreeRequirementModelAttribute = "totalDegreeRequirement";
+    final String messageModelAttribute = "message";
+
+
 
     /**
      * Autowired course repository
@@ -54,8 +64,8 @@ public class AdminController {
      */
     @GetMapping("/manageCourses")
     public String manageCourses(Model model) {
-        model.addAttribute("courses", courseRepo.findAll());
-        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
+        model.addAttribute(coursesModelAttribute, courseRepo.findAll());
+        model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAllRequirementNames());
         return "admin/manage-courses";
     }
 
@@ -70,25 +80,25 @@ public class AdminController {
     public synchronized String addCourse(@Valid Course course, BindingResult result, Model model) {
         try {
             if (result.hasErrors()) {
-                model.addAttribute("courses", courseRepo.findAll());
-                model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
+                model.addAttribute(coursesModelAttribute, courseRepo.findAll());
+                model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAllRequirementNames());
                 return "admin/manage-courses";
             }
             String courseName = course.getCourseName();
             if(courseRepo.existsByCourseName(courseName)){
                 String existMessage = String.format("שם הקורס \"%s\" כבר קיים. הזן שם אחר.", courseName);
-                model.addAttribute("existMessage", existMessage);
-                model.addAttribute("course", new Course());
-                model.addAttribute("courses", courseRepo.findAll());
-                model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
+                model.addAttribute(existMessageModelAttribute, existMessage);
+                model.addAttribute(courseModelAttribute, new Course());
+                model.addAttribute(coursesModelAttribute, courseRepo.findAll());
+                model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAllRequirementNames());
                 return "admin/manage-courses";
             }
             courseRepo.save(course);
             String addedMessage = String.format("הקורס \"%s\" נוסף בהצלחה.", courseName);
-            model.addAttribute("addedMessage", addedMessage);
-            model.addAttribute("course", new Course());
-            model.addAttribute("courses", courseRepo.findAll());
-            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
+            model.addAttribute(addedMessageModelAttribute, addedMessage);
+            model.addAttribute(courseModelAttribute, new Course());
+            model.addAttribute(coursesModelAttribute, courseRepo.findAll());
+            model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAllRequirementNames());
         } catch (Exception e) {
             model.addAttribute("error", errorMessages);
             return "error";
@@ -114,10 +124,10 @@ public class AdminController {
 
             List<UserCourses> userCourses = userCoursesRepo.findByCourseId(id);
             if(!userCourses.isEmpty()) {
-                model.addAttribute("existMessage", courseInUse);
-                model.addAttribute("course", new Course());
-                model.addAttribute("courses", courseRepo.findAll());
-                model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
+                model.addAttribute(existMessageModelAttribute, courseInUse);
+                model.addAttribute(courseModelAttribute, new Course());
+                model.addAttribute(coursesModelAttribute, courseRepo.findAll());
+                model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAllRequirementNames());
 
                 return "admin/manage-courses";
             } else {
@@ -128,7 +138,7 @@ public class AdminController {
             return "error";
         }
 
-        model.addAttribute("courses", courseRepo.findAll());
+        model.addAttribute(coursesModelAttribute, courseRepo.findAll());
         return "redirect:/admin/manageCourses";
     }
 
@@ -142,8 +152,8 @@ public class AdminController {
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
         try{
             Course course = courseRepo.findById(id).orElseThrow(() -> new IllegalArgumentException(invalidId + id));
-            model.addAttribute("course", course);
-            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
+            model.addAttribute(courseModelAttribute, course);
+            model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAllRequirementNames());
             return "admin/edit-courses";
         } catch (Exception e) {
         model.addAttribute("error", errorMessages);
@@ -162,7 +172,7 @@ public class AdminController {
     @PostMapping("/update")
     public synchronized String updateCourse(@RequestParam("id") long id, @Valid Course course, BindingResult result, Model model) {
         try {
-            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
+            model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAllRequirementNames());
             if (result.hasErrors()) {
                 course.setId(id);
                 return "admin/edit-courses";
@@ -172,7 +182,7 @@ public class AdminController {
             Course courseFromDB = courseRepo.findByCourseName(courseName);
             if(courseFromDB != null && courseFromDB.getId() != id){
                 String existMessage = String.format("שם הקורס \"%s\" כבר קיים. הזן שם אחר.", courseName);
-                model.addAttribute("message", existMessage);
+                model.addAttribute(messageModelAttribute, existMessage);
                 return "admin/edit-courses";
             }
             course.setId(id);
@@ -191,9 +201,9 @@ public class AdminController {
      */
     @GetMapping("/newCourse")
     public String newCourse(Model model) {
-        model.addAttribute("course", new Course());
-        model.addAttribute("courses", courseRepo.findAll());
-        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
+        model.addAttribute(courseModelAttribute, new Course());
+        model.addAttribute(coursesModelAttribute, courseRepo.findAll());
+        model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAllRequirementNames());
         return "admin/manage-courses";
     }
 
@@ -204,8 +214,8 @@ public class AdminController {
      */
     @GetMapping("/requirements")
     public String showRequirementsPage(Model model) {
-        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
-        model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+        model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAll());
+        model.addAttribute(totalDegreeRequirementModelAttribute, getTotalDegreeRequirement());
         return "admin/requirements-page";
     }
 
@@ -219,7 +229,7 @@ public class AdminController {
     public synchronized  String deleteRequirements(@RequestParam("id") long id, Model model) {
         try {
             DegreeRequirement requirement = degreeRequirementsRepo.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid DegreeRequirements Id:" + id));
+                    .orElseThrow(() -> new IllegalArgumentException(invalidId + id));
             degreeRequirementsRepo.delete(requirement);
             return "redirect:/admin/requirements";
         } catch (Exception e) {
@@ -239,8 +249,8 @@ public class AdminController {
     public synchronized String showDegreeRequirementUpdateForm(@PathVariable("id") long id, Model model) {
         try {
             DegreeRequirement degreeRequirement = degreeRequirementsRepo.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid requirement Id:" + id));
-            model.addAttribute("degreeRequirement", degreeRequirement);
+                    .orElseThrow(() -> new IllegalArgumentException(invalidId + id));
+            model.addAttribute(degreeRequirementModelAttribute, degreeRequirement);
             return "admin/edit-requirements";
         } catch (Exception e) {
             model.addAttribute("error", errorMessages);
@@ -270,7 +280,7 @@ public class AdminController {
             DegreeRequirement requirementFromDB = degreeRequirementsRepo.findByRequirementName(requirementName);
             if(requirementFromDB != null && requirementFromDB.getId() != id) {
                 String existMessage = String.format("שם הדרישה \"%s\" כבר קיים. הזן שם אחר.", requirementName);
-                model.addAttribute("message", existMessage);
+                model.addAttribute(messageModelAttribute, existMessage);
                 return "admin/edit-requirements";
             }
 
@@ -289,9 +299,9 @@ public class AdminController {
      */
     @GetMapping("/newDegreeRequirement")
     public String newDegreeRequirement(Model model) {
-        model.addAttribute("degreeRequirement", new DegreeRequirement());
-        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
-        model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+        model.addAttribute(degreeRequirementModelAttribute, new DegreeRequirement());
+        model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAll());
+        model.addAttribute(totalDegreeRequirementModelAttribute, getTotalDegreeRequirement());
         return "admin/requirements-page";
     }
 
@@ -305,30 +315,30 @@ public class AdminController {
     @PostMapping("/addDegreeRequirement")
     public synchronized String addDegreeRequirement(@Valid DegreeRequirement degreeRequirement, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
-            model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+            model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAll());
+            model.addAttribute(totalDegreeRequirementModelAttribute, getTotalDegreeRequirement());
             return "admin/requirements-page";
         }
         String requirementDegreeName = degreeRequirement.getRequirementName();
         if(degreeRequirementsRepo.existsByRequirementName(degreeRequirement.getRequirementName())){
             String existMessage = String.format("סוג הקורסים  \"%s\" כבר קיים.", requirementDegreeName);
-            model.addAttribute("existMessage", existMessage);
-            model.addAttribute("degreeRequirement", new DegreeRequirement());
-            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
-            model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+            model.addAttribute(existMessageModelAttribute, existMessage);
+            model.addAttribute(degreeRequirementModelAttribute, new DegreeRequirement());
+            model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAll());
+            model.addAttribute(totalDegreeRequirementModelAttribute, getTotalDegreeRequirement());
         }
         else {
             String addedMessage = String.format("סוג הקורסים \"%s\" נוספה בהצלחה.", requirementDegreeName);
             degreeRequirementsRepo.save(degreeRequirement);
-            model.addAttribute("addedMessage", addedMessage);
-            model.addAttribute("degreeRequirement", new DegreeRequirement());
-            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
-            model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+            model.addAttribute(addedMessageModelAttribute, addedMessage);
+            model.addAttribute(degreeRequirementModelAttribute, new DegreeRequirement());
+            model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAll());
+            model.addAttribute(totalDegreeRequirementModelAttribute, getTotalDegreeRequirement());
         }
 
-        model.addAttribute("degreeRequirement", new DegreeRequirement());
-        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
-        model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+        model.addAttribute(degreeRequirementModelAttribute, new DegreeRequirement());
+        model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAll());
+        model.addAttribute(totalDegreeRequirementModelAttribute, getTotalDegreeRequirement());
 
         return "admin/requirements-page";
     }

@@ -24,13 +24,17 @@ import java.util.LinkedHashMap;
 @RequestMapping("/user")
 public class StudentController {
 
-    final String invalidId = "מספר ID של הקורס לא חוקי";
     final String courseAddedSuccessfully = "הקורס נוסף בהצלחה";
     final String courseDeletedSuccessfully = "הקורס נמחק בהצלחה";
     final String coursesModelAttribute = "courses";
     final String userCoursesModelAttribute = "userCourses";
     final String degreeRequirementsModelAttribute = "degreeRequirements";
     final String totalDegreeRequirementModelAttribute = "totalDegreeRequirement";
+    final String userCoursesIdsModelAttribute = "userCoursesIds";
+    final String messageModelAttribute = "message";
+    final String studentStatusModelAttribute = "studentStatus";
+
+    final String invalidId = "מספר ID של הקורס לא חוקי";
 
     @Autowired
     private CourseRepo courseRepo;
@@ -63,7 +67,7 @@ public class StudentController {
             List<String> requirementTypeStatus = calculateStudentCoursesStatus(requirementTypeCourses);
             studentStatus.put(requirementName, requirementTypeStatus);
         }
-        model.addAttribute("studentStatus", studentStatus);
+        model.addAttribute(studentStatusModelAttribute, studentStatus);
         return "user/home-page";
     }
 
@@ -111,7 +115,7 @@ public class StudentController {
         }
 
         model.addAttribute(coursesModelAttribute, courseRepo.findAll());
-        model.addAttribute("userCoursesIds", userCoursesIds);
+        model.addAttribute(userCoursesIdsModelAttribute, userCoursesIds);
         model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAll());
         model.addAttribute(totalDegreeRequirementModelAttribute, getTotalDegreeRequirement());
         return "user/course-catalog";
@@ -141,7 +145,7 @@ public class StudentController {
 
         if (existingUserCourses == null) {
             userCoursesRepo.save( new UserCourses(newCourse,principal.getName(),null) );
-            model.addAttribute("message", courseAddedSuccessfully);
+            model.addAttribute(messageModelAttribute, courseAddedSuccessfully);
         }
 
         List<Long> userCoursesIds = new ArrayList<>();
@@ -151,7 +155,7 @@ public class StudentController {
         model.addAttribute(coursesModelAttribute, courseRepo.findAll());
         model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAll());
         model.addAttribute(totalDegreeRequirementModelAttribute, getTotalDegreeRequirement());
-        model.addAttribute("userCoursesIds", userCoursesIds);
+        model.addAttribute(userCoursesIdsModelAttribute, userCoursesIds);
         return "user/course-catalog";
     }
 
@@ -167,7 +171,7 @@ public class StudentController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
 
         userCoursesRepo.delete(userCourse);
-        model.addAttribute("message", courseDeletedSuccessfully);
+        model.addAttribute(messageModelAttribute, courseDeletedSuccessfully);
         return "redirect:/user/myCourses";
     }
 
@@ -182,7 +186,7 @@ public class StudentController {
         UserCourses userCourse = userCoursesRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(invalidId + id));
         userCoursesRepo.delete(userCourse);
-        model.addAttribute("message", courseDeletedSuccessfully);
+        model.addAttribute(messageModelAttribute, courseDeletedSuccessfully);
         return "redirect:/user/userCatalog";
     }
 
