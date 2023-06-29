@@ -6,9 +6,11 @@
 The Student Course Management System is a web-based application designed to assist 
 students in organizing and tracking their academic progress. 
 
-This application is built upon a server-side rendering engine, Thymeleaf, and features a modern, 
+This application is built upon a server-side rendering engine, Thymeleaf, and features a modern,
 responsive design thanks to the integration of the Bootstrap CSS framework.
 For the login, we used Spring Security.
+
+youTube link: https://youtu.be/_7DaFjrJ1nA
 
 ### General information
 Users can log in to the system with a username and password (details given).
@@ -36,7 +38,7 @@ And accordingly, the student can access pages that are assigned only to him
 * MySQL
 
 ## Installation
-Added a database work file for user convenience.
+Added a database file named ex5.sql for grader convenience.
 
 ## Useful information
 Admin:  Username: Solange Password: SolangeAdmin

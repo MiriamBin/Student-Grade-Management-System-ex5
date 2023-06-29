@@ -13,6 +13,9 @@ import lombok.ToString;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * JPA Entity Class for DegreeRequirement (DegreeRequirement is a requirement for a degree)
+ */
 @Entity
 @Getter
 @Setter

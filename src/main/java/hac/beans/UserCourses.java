@@ -7,7 +7,9 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 
-
+/**
+ * JPA Entity Class for UserCourses (UserCourses is a course that a user has taken)
+ */
 @Getter
 @Setter
 @Entity

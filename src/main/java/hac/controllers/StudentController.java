@@ -17,12 +17,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
-
-
-
+/**
+ * Student controller for handling student page
+ */
 @Controller
 @RequestMapping("/user")
 public class StudentController {
+
+    final String invalidId = "מספר ID של הקורס לא חוקי";
+    final String courseAddedSuccessfully = "הקורס נוסף בהצלחה";
+    final String courseDeletedSuccessfully = "הקורס נמחק בהצלחה";
+    final String coursesModelAttribute = "courses";
+    final String userCoursesModelAttribute = "userCourses";
+    final String degreeRequirementsModelAttribute = "degreeRequirements";
+    final String totalDegreeRequirementModelAttribute = "totalDegreeRequirement";
 
     @Autowired
     private CourseRepo courseRepo;
@@ -33,6 +41,12 @@ public class StudentController {
     @Autowired
     private DegreeRequirementsRepo degreeRequirementsRepo;
 
+    /**
+     * handle user home page request - student page
+     * @param model model for student page - contains student courses status
+     * @param principal principal for getting username
+     * @return student page
+     */
     @GetMapping("")
     public String userHomePage(Model model, Principal principal) {
 
@@ -53,6 +67,11 @@ public class StudentController {
         return "user/home-page";
     }
 
+    /**
+     * handle user courses page request - student courses page
+     * @param courses model for student courses page - contains student courses
+     * @return student courses page
+     */
     private List<String> calculateStudentCoursesStatus(List<UserCourses> courses) {
         double totalGradePoints = 0.0;
         int completedCredits = 0;
@@ -77,6 +96,13 @@ public class StudentController {
         return StudentCoursesStatus;
     }
 
+    /**
+     *  handle user catalog page request - student catalog page
+     * @param model model for student catalog page - contains courses, user courses ids,
+     * degree requirements and total degree requirement
+     * @param principal principal for getting username
+     * @return student catalog page
+     */
     @GetMapping("/userCatalog")
     public String userCatalog(Model model, Principal principal) {
         List<Long> userCoursesIds = new ArrayList<>();
@@ -84,10 +110,10 @@ public class StudentController {
             userCoursesIds.add(userCourse.getCourse().getId());
         }
 
-        model.addAttribute("courses", courseRepo.findAll());
+        model.addAttribute(coursesModelAttribute, courseRepo.findAll());
         model.addAttribute("userCoursesIds", userCoursesIds);
-        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
-        model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+        model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAll());
+        model.addAttribute(totalDegreeRequirementModelAttribute, getTotalDegreeRequirement());
         return "user/course-catalog";
     }
 
@@ -97,58 +123,90 @@ public class StudentController {
         return new DegreeRequirement(requirementName, totalCredits == null ? 0 : totalCredits);
     }
 
+    /**
+     * handle user my courses page request - student my courses page
+     * @param id course id for deleting course
+     * @param model model for student my courses page - contains user courses and total degree requirement
+     * @param principal principal for getting username
+     * @return student my courses page
+     */
     @PostMapping("/addToStudentList")
     public synchronized String addCourseToStudentList(@RequestParam("id") long id, Model model, Principal principal) {
         Course newCourse = courseRepo
                 .findById(id)
                 .orElseThrow(
-                        () -> new IllegalArgumentException("Invalid user Id:" + id)
+                        () -> new IllegalArgumentException(invalidId + id)
                 );
         UserCourses existingUserCourses = userCoursesRepo.findByCourseAndUsername(newCourse, principal.getName());
 
         if (existingUserCourses == null) {
             userCoursesRepo.save( new UserCourses(newCourse,principal.getName(),null) );
-            model.addAttribute("message", "הקורס נוסף בהצלחה");
+            model.addAttribute("message", courseAddedSuccessfully);
         }
 
         List<Long> userCoursesIds = new ArrayList<>();
         for (UserCourses userCourse : userCoursesRepo.findByUsername(principal.getName())) {
             userCoursesIds.add(userCourse.getCourse().getId());
         }
-        model.addAttribute("courses", courseRepo.findAll());
-        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAll());
-        model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
+        model.addAttribute(coursesModelAttribute, courseRepo.findAll());
+        model.addAttribute(degreeRequirementsModelAttribute, degreeRequirementsRepo.findAll());
+        model.addAttribute(totalDegreeRequirementModelAttribute, getTotalDegreeRequirement());
         model.addAttribute("userCoursesIds", userCoursesIds);
         return "user/course-catalog";
     }
 
+    /**
+     * handle user my courses page request - student my courses page
+     * @param id course id for deleting course
+     * @param model model for student my courses page - contains user courses and total degree requirement
+     * @return student my courses page
+     */
     @PostMapping("/deleteCourse")
     public synchronized String deleteCourse(@RequestParam("id") long id, Model model) {
         UserCourses userCourse = userCoursesRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
 
         userCoursesRepo.delete(userCourse);
-        model.addAttribute("message", "Course deleted successfully.");
+        model.addAttribute("message", courseDeletedSuccessfully);
         return "redirect:/user/myCourses";
     }
 
+    /**
+     * handle user my courses page request - student my courses page
+     * @param id course id for deleting course
+     * @param model model for student my courses page - contains user courses and total degree requirement
+     * @return student my courses page
+     */
     @PostMapping("/deleteCourseFromCatalog")
     public synchronized String deleteCourseFromCatalog(@RequestParam("id") long id, Model model) {
         UserCourses userCourse = userCoursesRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
+                .orElseThrow(() -> new IllegalArgumentException(invalidId + id));
         userCoursesRepo.delete(userCourse);
-        model.addAttribute("message", "Course deleted successfully.");
+        model.addAttribute("message", courseDeletedSuccessfully);
         return "redirect:/user/userCatalog";
     }
 
+    /**
+     * handle user edit course page request - student edit course page
+     * @param id course id for editing course
+     * @param model model for student edit course page - contains user courses
+     * @return student edit course page
+     */
     @PostMapping("/editCourse")
     public String editCourse(@RequestParam("id") long id, Model model) {
         UserCourses userCourses = userCoursesRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
-        model.addAttribute("userCourses",userCourses);
+                .orElseThrow(() -> new IllegalArgumentException(invalidId + id));
+        model.addAttribute(userCoursesModelAttribute,userCourses);
         return "user/edit-user-course";
     }
 
+    /**
+     * handle user update course page request - student update course page
+     * @param id course id for updating course
+     * @param userCourses user courses for updating course
+     * @param result result for updating course
+     * @return student my courses page
+     */
     @PostMapping("/updateCourse")
     public synchronized String updateCourse(@RequestParam("id") long id, @Valid UserCourses userCourses, BindingResult result) {
         if (result.hasErrors()) {
@@ -157,7 +215,7 @@ public class StudentController {
 
         // Retrieve the course from the database based on the given id
         UserCourses existingUserCourses = userCoursesRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
+                .orElseThrow(() -> new IllegalArgumentException(invalidId + id));
 
         // Update the grade value
         existingUserCourses.setGrade(userCourses.getGrade());
@@ -169,11 +227,17 @@ public class StudentController {
     }
 
 
+    /**
+     * handle user my courses page request - student my courses page
+     * @param model model for student my courses page - contains user courses
+     * @param principal principal for getting username
+     * @return student my courses page
+     */
     @GetMapping("/myCourses")
     public String myCourses(Model model, Principal principal) {
-        model.addAttribute("courses", courseRepo.findAll());
-        model.addAttribute("userCourses", userCoursesRepo.findAll());
-        model.addAttribute("userCourses", userCoursesRepo.findByUsername(principal.getName()));
+        model.addAttribute(coursesModelAttribute, courseRepo.findAll());
+        model.addAttribute(userCoursesModelAttribute, userCoursesRepo.findAll());
+        model.addAttribute(userCoursesModelAttribute, userCoursesRepo.findByUsername(principal.getName()));
         return "/user/my-courses";
     }
 }

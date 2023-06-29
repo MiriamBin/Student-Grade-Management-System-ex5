@@ -11,12 +11,17 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+/**
+ * JPA Entity Class for Course
+ * this class represents a course in the system
+ */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Course implements Serializable {
+
 
     @Serial
     private static final long serialVersionUID = 1L;
