@@ -30,7 +30,7 @@ public class CourseAdminController {
 
     @GetMapping("/manageCourses")
     public String manageCourses(Model model) {
-        model.addAttribute("course", new Course());
+       // model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
         return "admin/manage-courses";
@@ -81,6 +81,14 @@ public class CourseAdminController {
         course.setId(id);
         courseRepo.save(course);
         model.addAttribute("courses", courseRepo.findAll());
+        return "admin/manage-courses";
+    }
+
+    @GetMapping("/newCourse")
+    public String newCourse(Model model) {
+        model.addAttribute("course", new Course());
+        model.addAttribute("courses", courseRepo.findAll());
+        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
         return "admin/manage-courses";
     }
 
