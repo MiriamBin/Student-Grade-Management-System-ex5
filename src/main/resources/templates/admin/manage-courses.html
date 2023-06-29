@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>ניהול קטלוג קורסים</title>
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'}">
 
     <style>
         body {
@@ -12,6 +12,10 @@
         }
         .form-group {
             text-align: right;
+        }
+        .btn-table {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
         }
     </style>
 </head>
@@ -24,44 +28,61 @@
     </div>
 </header>
 
-<main class="container py-4">
-    <section>
-        <div class="row">
-            <div class="col-12">
-                <h2 class="text-center mb-4">ניהול קטלוג קורסים</h2>
-            </div>
+<main class="container py-3">
+
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center m-4">ניהול קטלוג קורסים</h2>
         </div>
-    </section>
+    </div>
+
     <div th:if="${course}" class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-xs-12 col-md-8">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body" th:if="${degreeRequirements.isEmpty()}">
+                    <div class="alert alert-primary text-center mb-0">
+                        רשימת דרישות התואר ריקה.
+                        <br>
+                        יש לגשת לעמוד
+                        <a th:href="@{/admin/requirements}">דרישות</a>
+                        ולהוסיף דרישות לתואר לפני שניתן יהיה להוסיף קורסים.
+                    </div>
+                </div>
+
+
+                <div class="card-body" th:unless="${degreeRequirements.isEmpty()}">
                     <h3 class="card-title text-center">הוסף קורס חדש</h3>
                     <hr>
-        <form action="#" method="post" th:action="@{/admin/addCourse}" th:object="${course}">
-            <div class="row">
-                <div class="form-group col-xs-12 col-md-6">
-                    <label class="col-form-label" for="courseName">שם</label>
-                    <input class="form-control" id="courseName" placeholder="שם" th:field="*{courseName}" type="text">
-                    <span class="text-danger" th:errors="*{courseName}" th:if="${#fields.hasErrors('courseName')}"></span>
-                </div>
-                <div class="form-group col-xs-12 col-md-6">
-                    <label class="col-form-label" for="credit">נקודות זכות</label>
-                    <input class="form-control" id="credit" placeholder="נקודות זכות" th:field="*{credit}" type="number">
-                    <span class="text-danger" th:errors="*{credit}" th:if="${#fields.hasErrors('credit')}"></span>
-                </div>
-                <div class="form-group col-xs-12 col-md-6">
-                    <label class="col-form-label" for="requirementType">שם דרישה</label>
-                    <select class="form-control" id="requirementType" th:field="*{requirementType}">
-                        <option th:each="requirementName : ${degreeRequirements}" th:value="${requirementName}" th:text="${requirementName}"></option>
-                    </select>
-                    <span class="text-danger" th:errors="*{requirementType}" th:if="${#fields.hasErrors('requirementType')}"></span>
-                </div>
-            </div>
-            <div class="row">
-                <input class="btn btn-primary" type="submit" value="הוסף קורס">
-            </div>
-        </form>
+                    <form action="#" method="post" th:action="@{/admin/addCourse}" th:object="${course}">
+                        <div class="row">
+                            <div class="form-group col-xs-12 col-md-6">
+                                <label class="col-form-label" for="courseName">שם</label>
+                                <input class="form-control" id="courseName" placeholder="שם" th:field="*{courseName}" type="text">
+                                <span class="text-danger" th:errors="*{courseName}" th:if="${#fields.hasErrors('courseName')}"></span>
+                            </div>
+                            <div class="form-group col-xs-12 col-md-6">
+                                <label class="col-form-label" for="credit">נקודות זכות</label>
+                                <input class="form-control" id="credit" placeholder="נקודות זכות" th:field="*{credit}" type="number">
+                                <span class="text-danger" th:errors="*{credit}" th:if="${#fields.hasErrors('credit')}"></span>
+                            </div>
+                            <div class="form-group col-xs-12 col-md-6">
+                                <label class="col-form-label" for="requirementType">שם דרישה</label>
+                                <select class="form-control" id="requirementType" th:field="*{requirementType}">
+                                    <option th:each="requirementName : ${degreeRequirements}" th:value="${requirementName}" th:text="${requirementName}">
+                                    </option>
+                                </select>
+                                <span class="text-danger" th:errors="*{requirementType}" th:if="${#fields.hasErrors('requirementType')}"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mt-3">
+                                <button class="btn btn-primary w-100" type="submit">הוסף</button>
+                            </div>
+                            <div class="col mt-3">
+                                <a class="btn btn-secondary w-100" th:href="@{/admin/manageCourses}">ביטול</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -86,7 +107,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table mb-0">
                                 <thead>
                                 <tr>
                                     <th>שם הקורס</th>
@@ -107,13 +128,12 @@
                                     <td th:text="${course.courseName}"></td>
                                     <td th:text="${course.requirementType}"></td>
                                     <td th:text="${course.credit}"></td>
-
                                     <td>
-                                        <a class="btn btn-primary"
+                                        <a class="btn btn-primary btn-table"
                                            th:href="@{/admin/editCourse/{id}(id=${course.id})}">ערוך</a>
                                         <form action="#" method="post" th:action="@{/admin/delete}" th:object="${course}">
                                             <input name="id" th:value="${course.id}" type="hidden">
-                                            <button class="btn btn-danger" type="submit" value="מחק">מחק</button>
+                                            <button class="btn btn-danger btn-table" type="submit" value="מחק">מחק</button>
                                         </form>
                                     </td>
                                 </tr>

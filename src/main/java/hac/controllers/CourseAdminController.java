@@ -25,16 +25,37 @@ public class CourseAdminController {
 
     @GetMapping("")
     public String adminIndex() {
-        return "redirect:/admin/manageCourses";
+        return "admin/home-page";
     }
 
     @GetMapping("/manageCourses")
     public String manageCourses(Model model) {
-       // model.addAttribute("course", new Course());
         model.addAttribute("courses", courseRepo.findAll());
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
         return "admin/manage-courses";
     }
+
+    @PostMapping("/addCourse")
+    public synchronized String addCourse(@Valid Course course, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("courses", courseRepo.findAll());
+            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
+            return "admin/manage-courses";
+        }
+        if(courseRepo.existsByCourseName(course.getCourseName())){
+            model.addAttribute("message", "Course already exists.");
+            model.addAttribute("course", new Course());
+            model.addAttribute("courses", courseRepo.findAll());
+            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
+            return "admin/manage-courses";
+        }
+        courseRepo.save(course);
+        model.addAttribute("course", new Course());
+        model.addAttribute("courses", courseRepo.findAll());
+        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
+        return "admin/manage-courses";
+    }
+
     @PostMapping("/delete")
     public synchronized String deleteCourse(@RequestParam("id") long id, Model model) {
         try {
@@ -73,15 +94,24 @@ public class CourseAdminController {
 
     @PostMapping("/update")
     public synchronized  String updateCourse(@RequestParam("id") long id, @Valid Course course, BindingResult result, Model model) {
+
         model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
         if (result.hasErrors()) {
             course.setId(id);
             return "admin/edit-courses";
         }
+
+        String courseName = course.getCourseName();
+        Course courseFromDB = courseRepo.findByCourseName(courseName);
+        if(courseFromDB != null && courseFromDB.getId() != id){
+            String existMessage = String.format("שם הקורס \"%s\" כבר קיים. הזן שם אחר.", course.getCourseName());
+            model.addAttribute("message", existMessage);
+            return "admin/edit-courses";
+        }
+
         course.setId(id);
         courseRepo.save(course);
-        model.addAttribute("courses", courseRepo.findAll());
-        return "admin/manage-courses";
+        return "redirect:/admin/manageCourses";
     }
 
     @GetMapping("/newCourse")
@@ -101,7 +131,6 @@ public class CourseAdminController {
 
     @PostMapping("/deleteRequirements")
     public synchronized  String deleteRequirements(@RequestParam("id") long id, Model model) {
-
         try {
             DegreeRequirement requirement = degreeRequirementsRepo.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid DegreeRequirements Id:" + id));
@@ -111,11 +140,6 @@ public class CourseAdminController {
             model.addAttribute("error", "There was a problem with the database. Please try again later.");
             return "error";
         }
-//
-//        DegreeRequirement requirement = degreeRequirementsRepo.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid DegreeRequirements Id:" + id));
-//        degreeRequirementsRepo.delete(requirement);
-//        return "redirect:/admin/requirements";
     }
 
     @GetMapping("/editDegreeRequirement/{id}")
@@ -173,27 +197,6 @@ public class CourseAdminController {
         model.addAttribute("totalDegreeRequirement", getTotalDegreeRequirement());
 
         return "admin/requirements-page";
-    }
-
-    @PostMapping("/addCourse")
-    public synchronized String addCourse(@Valid Course course, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("courses", courseRepo.findAll());
-            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
-            return "admin/manage-courses";
-        }
-        if(courseRepo.existsByCourseName(course.getCourseName())){
-            model.addAttribute("message", "Course already exists.");
-            model.addAttribute("course", new Course());
-            model.addAttribute("courses", courseRepo.findAll());
-            model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
-            return "admin/manage-courses";
-        }
-        courseRepo.save(course);
-        model.addAttribute("course", new Course());
-        model.addAttribute("courses", courseRepo.findAll());
-        model.addAttribute("degreeRequirements", degreeRequirementsRepo.findAllRequirementNames());
-        return "admin/manage-courses";
     }
 
     private DegreeRequirement getTotalDegreeRequirement(){

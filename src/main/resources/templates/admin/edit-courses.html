@@ -3,53 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>קטלוג קורסים</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>עריכת קורסים</title>
+    <link rel="stylesheet" th:href="@{'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'}">
 </head>
 
 <body>
-<header class="bg-primary py-3">
+<header class="bg-primary py-4">
     <div class="container">
         <h1 class="text-white">ניהול קורסים לסטודנטים</h1>
     </div>
 </header>
 
-<div class="container my-5">
-    <h2 class="mb-5">ערוך קורס</h2>
-    <div class="row">
-        <div class="col-md-6">
-            <form action="#" th:action="@{/admin/update}" th:object="${course}" method="post">
-                <input type="hidden" th:field="*{id}"/>
+<div class="container my-3">
 
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        <label for="courseName" class="col-form-label">שם הקורס</label>
-                        <input type="text" th:field="*{courseName}" class="form-control" id="courseName" placeholder="שם הקורס">
-                        <span th:if="${#fields.hasErrors('courseName')}" th:errors="*{courseName}" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="credit" class="col-form-label">נקודות זכות</label>
-                        <input type="number" th:field="*{credit}" class="form-control" id="credit" placeholder="נקודות זכות">
-                        <span th:if="${#fields.hasErrors('credit')}" th:errors="*{credit}" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-xs-12 col-md-6">
-                        <label class="col-form-label" for="requirementType">שם דרישה</label>
-                        <select class="form-control" id="requirementType" th:field="*{requirementType}">
-                            <option th:each="requirementName : ${degreeRequirements}" th:value="${requirementName}" th:text="${requirementName}"></option>
-                        </select>
-                        <span class="text-danger" th:errors="*{requirementType}" th:if="${#fields.hasErrors('requirementType')}"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mt-5">
-                        <input type="submit" class="btn btn-primary" value="שמור שינויים">
-                    </div>
-                    <div class="col-md-6 mt-5">
-                        <a class="btn btn-secondary" th:href="@{/admin/manageCourses}">חזור</a>
-                    </div>
-                </div>
-            </form>
+    <div class="row mb-3">
+        <div class="col-12">
+            <h2 class="text-center m-4">
+                ניהול קורסי הקטלוג
+                <br>
+                <small class="text-muted">עמוד עריכה</small>
+            </h2>
         </div>
+    </div>
+
+    <div class="row justify-content-center mb-2">
+        <div class="col-xs-12 col-md-8">
+            <div class="card card-body">
+                <form action="#" th:action="@{/admin/update}" th:object="${course}" method="post">
+                    <input type="hidden" th:field="*{id}"/>
+                    <div class="row">
+                        <div class="form-group col-xs-12 col-md-6">
+                            <label for="courseName" class="col-form-label">שם הקורס</label>
+                            <input type="text" th:field="*{courseName}" class="form-control" id="courseName" placeholder="שם הקורס">
+                            <span th:if="${#fields.hasErrors('courseName')}" th:errors="*{courseName}" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-xs-12 col-md-6">
+                            <label for="credit" class="col-form-label">נקודות זכות</label>
+                            <input type="number" th:field="*{credit}" class="form-control" id="credit" placeholder="נקודות זכות">
+                            <span th:if="${#fields.hasErrors('credit')}"
+                                  th:errors="*{credit}" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-xs-12 col-md-6">
+                            <label class="col-form-label" for="requirementType">שם דרישה</label>
+                            <select class="form-control" id="requirementType" th:field="*{requirementType}">
+                                <option th:each="requirementName : ${degreeRequirements}"
+                                        th:value="${requirementName}"
+                                        th:text="${requirementName}">
+                                </option>
+                            </select>
+                            <span class="text-danger" th:errors="*{requirementType}" th:if="${#fields.hasErrors('requirementType')}"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6 mt-3">
+                            <input type="submit" class="btn btn-primary w-100" value="שמור שינויים">
+                        </div>
+                        <div class="col-xs-12 col-md-6 mt-3">
+                            <a class="btn btn-secondary w-100" th:href="@{/admin/manageCourses}">ביטול</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center text-center">
+        <div class="alert alert-danger col-xs-12 col-md-6" th:if="${message}" th:text="${message}"></div>
     </div>
 </div>
 <div th:insert="fragments/footer.html :: footer"></div>
